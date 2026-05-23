@@ -1,25 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-  (function() {
-    if (window.self === window.top) {
-      document.documentElement.innerHTML = "";
-      window.location.replace("https://sites.google.com/view/lohost/");
-      return;
-    }
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = function(e) {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
-        return false;
-      }
-    };
-    setInterval(function() {
-      debugger;
-    }, 50);
-  })();
-</script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
