@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+  (function() {
+    if (window.self === window.top) {
+      document.documentElement.innerHTML = "";
+      window.location.replace("https://sites.google.com/view/lohost/");
+      return;
+    }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
+        return false;
+      }
+    };
+    setInterval(function() {
+      debugger;
+    }, 50);
+  })();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
@@ -410,9 +429,9 @@ body::-webkit-scrollbar { display: none; }
       </span>
     </div>
     <div class="genre-list">
-      <div class="genre-item active" data-genre="all" data-label="All Games" onclick="setGenre('all',this)">
+      <div class="genre-item active" data-genre="all" data-label="Discover" onclick="setGenre('all',this)">
         <span class="genre-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="8" y1="12" x2="12" y2="12"/><line x1="10" y1="10" x2="10" y2="14"/><circle cx="17" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="19.5" cy="13" r="1" fill="currentColor" stroke="none"/></svg></span>
-        <span class="genre-label">All Games</span>
+        <span class="genre-label">Discover</span>
       </div>
       <div class="genre-item" data-genre="io" data-label=".IO Games" onclick="setGenre('io',this)">
         <span class="genre-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-4 4-4 14 0 18M12 3c4 4 4 14 0 18"/></svg></span>
@@ -891,11 +910,15 @@ function renderAll() {
     const topGameId  = allByLikes[0]?.id;
     const fyHero = allByLikes[0];
     const fyRest = allByLikes.filter(g=>g.id!==fyHero.id);
-    html += `<div class="section anim-section">${mkHeader('For You','https://img.itch.zone/aW1nLzE5OTMwNzM2LnBuZw==/original/9xRpPp.png','Popular','#4f7cff')}<div class="grid-foryou">${mkCard(fyHero,'hero-left',true)}${fyRest.slice(0,4).map(g=>mkCard(g,'small',g.id===topGameId)).join('')}</div></div>`;
+    const randImg = arr => arr[Math.floor(Math.random()*arr.length)]?.img || null;
+
+    const fyImg = randImg(allByLikes);
+    html += `<div class="section anim-section">${mkHeader('For You',fyImg,'Popular','#4f7cff')}<div class="grid-foryou">${mkCard(fyHero,'hero-left',true)}${fyRest.slice(0,4).map(g=>mkCard(g,'small',g.id===topGameId)).join('')}</div></div>`;
 
     if (recentlyPlayed.length) {
         const recG = recentlyPlayed.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean);
-        html += `<div class="section anim-section">${mkHeader('Recently Played',null,null,'#00e5ff')}<div class="grid-4">${recG.map(g=>mkCard(g,'g4-card',g.id===topGameId)).join('')}</div></div>`;
+        const recImg = randImg(recG);
+        html += `<div class="section anim-section">${mkHeader('Recently Played',recImg,null,'#00e5ff')}<div class="grid-4">${recG.map(g=>mkCard(g,'g4-card',g.id===topGameId)).join('')}</div></div>`;
     }
 
     const topToday = [...GAMES]
@@ -903,18 +926,20 @@ function renderAll() {
         .sort((a,b) => (dailyCounts[b.id]||0) - (dailyCounts[a.id]||0))
         .slice(0, 8);
     if (topToday.length) {
-        html += `<div class="section anim-section">${mkHeader('Most Played Today',null,null,'#ffd600')}<div class="grid-4">${topToday.map(g=>mkCardPlays(g,'g4-card')).join('')}</div></div>`;
+        const todayImg = randImg(topToday);
+        html += `<div class="section anim-section">${mkHeader('Most Played Today',todayImg,null,'#ffd600')}<div class="grid-4">${topToday.map(g=>mkCardPlays(g,'g4-card')).join('')}</div></div>`;
     }
 
     const frontPageGames = [...GAMES].filter(g => g.showOnFrontPage !== false);
     const shuffled = [...frontPageGames].sort(()=>Math.random()-0.5);
+    const allImg = randImg(frontPageGames);
     const wideAt = new Set([0,7,14]), tallAt = new Set([3,10,17]);
     const allCards = shuffled.map((g,i) => {
         if (wideAt.has(i%18)) return mkCard(g,'wide-card',g.id===topGameId);
         if (tallAt.has(i%18)) return mkCard(g,'tall-card',g.id===topGameId);
         return mkCard(g,'g3-card',g.id===topGameId);
     }).join('');
-    html += `<div class="section anim-section">${mkHeader('All Games',null,null,'#b04fff')}<div class="grid-mixed">${allCards}</div></div>`;
+    html += `<div class="section anim-section">${mkHeader('Discover',allImg,null,'#b04fff')}<div class="grid-mixed">${allCards}</div></div>`;
 
     document.getElementById('content').innerHTML = html;
 }
