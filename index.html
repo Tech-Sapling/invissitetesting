@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+  (function() {
+    if (window.self === window.top) {
+      document.documentElement.innerHTML = "";
+      window.location.replace("https://sites.google.com/view/lohost/");
+      return;
+    }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
+        return false;
+      }
+    };
+    setInterval(function() {
+      debugger;
+    }, 50);
+  })();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+    background: #080c1e;
+    background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(79,124,255,0.08) 0%, transparent 70%);
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    scrollbar-width: none; -ms-overflow-style: none; overflow-x: hidden;
+}
+body::-webkit-scrollbar { display: none; }
+:root {
+    --bg-card:    #121b40;
+    --bg-card-b:  #0f1730;
+    --bg-card-c:  #15203e;
+    --bg-sidebar: #0e1736;
+    --bg-header:  #0d1530;
+    --text-dim:   #7a8bb5;
+    --green:      #00e676;
+    --accent:     #4f7cff;
+    --ease: cubic-bezier(.4,0,.2,1);
+    --sidebar-w:  210px;
+    --sidebar-col: 52px;
+    --page-pad: 28px;
+    --page-max: 1440px;
+    --color-all:      #4f7cff;
+    --color-io:       #00e5ff;
+    --color-shooter:  #ff4f4f;
+    --color-racing:   #ff9f00;
+    --color-casual:   #ffd600;
+    --color-puzzle:   #b04fff;
+    --color-survival: #00e676;
+}
+#site-topbar {
+    position: sticky; top: 0; z-index: 500;
+    height: 54px;
+    background: rgba(9,14,33,0.97);
+    border-bottom: 1px solid rgba(79,124,255,0.1);
+    backdrop-filter: blur(20px);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 16px;
+}
+.topbar-logo-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
+.topbar-logo-img-wrap { width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.topbar-logo-img-wrap img { width: 30px; height: 30px; object-fit: cover; display: block; opacity: .92; transition: opacity .2s; }
+.topbar-logo-wrap:hover .topbar-logo-img-wrap img { opacity: 1; }
+.topbar-site-name { display: flex; flex-direction: column; line-height: 1.05; user-select: none; }
+.topbar-site-name span:first-child { font-size: 13px; font-weight: 900; color: #fff; letter-spacing: 0.5px; }
+.topbar-site-name span:last-child { font-size: 13px; font-weight: 500; color: #4f7cff; letter-spacing: 0.5px; }
+.topbar-search-wrap { flex: 1; max-width: 480px; position: relative; }
+.topbar-search { width: 100%; background: #0f1a3e; border: 1.5px solid rgba(79,124,255,0.18); border-radius: 10px; color: #fff; font-size: 13px; font-family: inherit; padding: 8px 16px 8px 38px; outline: none; transition: border-color .22s, background .22s, box-shadow .22s; }
+.topbar-search:focus { border-color: rgba(79,124,255,0.55); background: #111f48; box-shadow: 0 0 0 3px rgba(79,124,255,0.12); }
+.topbar-search::placeholder { color: #3d5080; }
+.topbar-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: .4; transition: opacity .2s; }
+.topbar-search-icon svg { width: 15px; height: 15px; fill: none; stroke: #7da4ff; stroke-width: 2; stroke-linecap: round; }
+.topbar-search-wrap:focus-within .topbar-search-icon { opacity: .85; }
+#search-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #0d1530; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; z-index: 9999; box-shadow: 0 12px 36px rgba(0,0,0,0.6); display: none; animation: dropdownIn .15s var(--ease) both; }
+@keyframes dropdownIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+#search-dropdown.visible { display: block; }
+.dd-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; cursor: pointer; transition: background .12s; }
+.dd-item:hover, .dd-item.focused { background: rgba(255,255,255,0.05); }
+.dd-item-name { font-size: 13px; font-weight: 600; color: #d0d8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+.dd-item-name mark { background: none; color: #fff; font-weight: 800; }
+.dd-item-genre { font-size: 11px; color: var(--text-dim); font-weight: 500; flex-shrink: 0; }
+.dd-empty { padding: 12px 14px; font-size: 13px; color: var(--text-dim); }
+#page-root { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-pad); height: calc(100vh - 54px); overflow: hidden; }
+.layout { display: flex; align-items: flex-start; height: calc(100vh - 54px); overflow: hidden; }
+.main { flex: 1; min-width: 0; height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; padding: 22px var(--page-pad) var(--page-pad) 0; }
+.main::-webkit-scrollbar { display: none; }
+.left-col {
+    display: flex; flex-direction: column; gap: 12px;
+    margin-right: 18px; flex-shrink: 0; width: var(--sidebar-w);
+    transition: width .32s var(--ease);
+    height: 100%; overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 22px 0 32px; direction: rtl;
+}
+.left-col > * { direction: ltr; }
+.left-col::-webkit-scrollbar { display: none; }
+.announce-box {
+    background: var(--bg-sidebar);
+    border-radius: 14px;
+    border: 1px solid rgba(79,124,255,0.2);
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: opacity .32s var(--ease), max-height .38s var(--ease), margin-top .32s var(--ease);
+    max-height: 600px;
+    opacity: 1;
+}
+.announce-box.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-top: -12px;
+    pointer-events: none;
+}
+.announce-header { display: flex; align-items: center; gap: 6px; padding: 10px 14px 6px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4f7cff; border-bottom: 1px solid rgba(79,124,255,0.12); }
+.announce-msg { padding: 10px 14px; font-size: 12.5px; font-weight: 500; color: #c5d0f0; line-height: 1.55; }
+.announce-img-wrap { padding: 0 10px 10px; }
+.announce-img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(79,124,255,0.15); display: block; }
+.poll-options { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+.poll-btn { width: 100%; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; font-family: inherit; text-align: left; background: rgba(79,124,255,0.1); color: #a0b4ff; border: 1px solid rgba(79,124,255,0.2); transition: background .2s, color .2s, border-color .2s; position: relative; overflow: hidden; }
+.poll-btn:hover { background: rgba(79,124,255,0.2); color: #fff; border-color: rgba(79,124,255,0.4); }
+.poll-btn.voted { background: rgba(79,124,255,0.25); color: #fff; border-color: var(--accent); cursor: default; }
+.poll-bar { position: absolute; left: 0; top: 0; height: 100%; background: rgba(79,124,255,0.15); z-index: 0; transition: width .5s var(--ease); }
+.poll-btn-label { position: relative; z-index: 1; display: flex; justify-content: space-between; }
+.poll-pct { font-size: 11px; opacity: .8; }
+.sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--bg-sidebar); border-radius: 14px; transition: width .32s var(--ease), min-width .32s var(--ease); flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; flex-shrink: 0; }
+.sidebar.collapsed { width: var(--sidebar-col); min-width: var(--sidebar-col); }
+.sidebar-toggle { display: flex; align-items: center; justify-content: space-between; padding: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.06); transition: background .2s; white-space: nowrap; user-select: none; }
+.sidebar-toggle:hover { background: rgba(79,124,255,0.08); }
+.sidebar-toggle-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; transition: opacity .25s var(--ease); }
+.sidebar.collapsed .sidebar-toggle-label { opacity: 0; }
+.toggle-arrow { width: 20px; height: 20px; flex-shrink: 0; color: var(--text-dim); display: flex; align-items: center; justify-content: center; transition: transform .3s var(--ease); }
+.sidebar.collapsed .toggle-arrow { transform: rotate(180deg); }
+.genre-list {
+    padding: 8px 0;
+    overflow: hidden;
+    max-height: 500px;
+    transition: max-height .35s var(--ease), opacity .28s var(--ease), padding .28s var(--ease);
+    opacity: 1;
+}
+.sidebar.collapsed .genre-list {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+}
+.genre-item { display: flex; align-items: center; gap: 11px; padding: 11px 14px; cursor: pointer; border-left: 3px solid transparent; transition: background .2s, border-color .2s; white-space: nowrap; overflow: hidden; position: relative; user-select: none; }
+.genre-item:hover { background: rgba(79,124,255,0.1); }
+.genre-item.active { background: rgba(79,124,255,0.18); border-left-color: var(--accent); }
+.genre-item[data-genre="io"].active       { background: rgba(0,229,255,0.12);  border-left-color: var(--color-io); }
+.genre-item[data-genre="shooter"].active  { background: rgba(255,79,79,0.12);  border-left-color: var(--color-shooter); }
+.genre-item[data-genre="racing"].active   { background: rgba(255,159,0,0.12);  border-left-color: var(--color-racing); }
+.genre-item[data-genre="casual"].active   { background: rgba(255,214,0,0.12);  border-left-color: var(--color-casual); }
+.genre-item[data-genre="puzzle"].active   { background: rgba(176,79,255,0.12); border-left-color: var(--color-puzzle); }
+.genre-item[data-genre="survival"].active { background: rgba(0,230,118,0.12);  border-left-color: var(--color-survival); }
+.genre-icon { width: 26px; height: 26px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.genre-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: opacity .2s; }
+.genre-item[data-genre="all"]      .genre-icon svg { stroke: var(--color-all);      opacity: 0.45; }
+.genre-item[data-genre="io"]       .genre-icon svg { stroke: var(--color-io);       opacity: 0.45; }
+.genre-item[data-genre="shooter"]  .genre-icon svg { stroke: var(--color-shooter);  opacity: 0.45; }
+.genre-item[data-genre="racing"]   .genre-icon svg { stroke: var(--color-racing);   opacity: 0.45; }
+.genre-item[data-genre="casual"]   .genre-icon svg { stroke: var(--color-casual);   opacity: 0.45; }
+.genre-item[data-genre="puzzle"]   .genre-icon svg { stroke: var(--color-puzzle);   opacity: 0.45; }
+.genre-item[data-genre="survival"] .genre-icon svg { stroke: var(--color-survival); opacity: 0.45; }
+.genre-item.active .genre-icon svg, .genre-item:hover .genre-icon svg { opacity: 1; }
+.genre-item[data-genre="all"] .genre-icon svg circle,
+.genre-item[data-genre="all"] .genre-icon svg [fill="currentColor"] { fill: var(--color-all); stroke: none; }
+.genre-label { font-size: 13px; font-weight: 600; color: var(--text-dim); transition: color .2s, opacity .25s var(--ease); }
+.genre-item.active .genre-label, .genre-item:hover .genre-label { color: #fff; }
+.sidebar.collapsed .genre-label { opacity: 0; pointer-events: none; }
+.sidebar.collapsed .genre-item:hover::after { content: attr(data-label); position: absolute; left: calc(var(--sidebar-col) + 8px); top: 50%; transform: translateY(-50%); background: #1a2760; color: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; white-space: nowrap; z-index: 999; box-shadow: 0 6px 20px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08); pointer-events: none; }
+.section { margin-bottom: 32px; }
+.section-header { margin-bottom: 14px; }
+.header-content { position: relative; width: 100%; height: 52px; background: var(--bg-header); overflow: hidden; display: flex; align-items: center; border-radius: 10px; border-left: 4px solid var(--accent); }
+.header-img { position: absolute; top: 0; right: 0; width: 75%; height: 100%; object-fit: cover; opacity: .75; mask-image: linear-gradient(to right, transparent 0%, black 45%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 45%); }
+.header-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg-header) 18%, rgba(13,21,48,0.3) 60%, transparent 100%); z-index: 2; }
+.header-badge { position: relative; z-index: 3; margin-left: 18px; display: flex; align-items: center; gap: 10px; }
+.header-title { font-size: 15px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2.5px; }
+.header-pill { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(79,124,255,0.2); color: #7da4ff; border: 1px solid rgba(79,124,255,0.3); }
+.grid-foryou { display: grid; grid-template-columns: 1.65fr 1fr 1fr; grid-template-rows: auto auto; gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.hero-left { grid-column: 1; grid-row: 1 / 3; }
+.grid-mixed { display: grid; grid-template-columns: repeat(3,1fr); grid-auto-flow: dense; gap: 10px; }
+.wide-card { grid-column: span 2; }
+.tall-card { grid-row: span 2; }
+.game-card.v-a { background: #111b3e; border-color: rgba(79,124,255,0.07); }
+.game-card.v-b { background: #0f1d2e; border-color: rgba(0,229,255,0.06); }
+.game-card.v-c { background: #1a1228; border-color: rgba(176,79,255,0.08); }
+.game-card.v-d { background: #1a1510; border-color: rgba(255,159,0,0.07); }
+.game-card.v-e { background: #101a18; border-color: rgba(0,230,118,0.07); }
+.game-card[data-genre="io"]       { background: #0d1e2e; border-color: rgba(0,229,255,0.08); }
+.game-card[data-genre="shooter"]  { background: #1f1010; border-color: rgba(255,79,79,0.08); }
+.game-card[data-genre="racing"]   { background: #1a1608; border-color: rgba(255,159,0,0.08); }
+.game-card[data-genre="casual"]   { background: #1a1a08; border-color: rgba(255,214,0,0.08); }
+.game-card[data-genre="puzzle"]   { background: #180f28; border-color: rgba(176,79,255,0.08); }
+.game-card[data-genre="survival"] { background: #0d1e14; border-color: rgba(0,230,118,0.08); }
+.game-card {
+    display: flex; flex-direction: column; cursor: pointer;
+    border-radius: 12px; overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.04);
+    padding: 0; text-align: left; width: 100%; height: 100%;
+    transition: transform .28s var(--ease), border-color .28s var(--ease), box-shadow .28s var(--ease);
+    animation: fadeUp .38s var(--ease) both;
+    --glow-color: #4f7cff;
+}
+.game-card:hover {
+    transform: translateY(-5px) scale(1.013);
+    border-color: var(--glow-color);
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--glow-color) 45%, transparent),
+        0 24px 48px rgba(0,0,0,0.55),
+        0 0 40px color-mix(in srgb, var(--glow-color) 30%, transparent),
+        0 0 80px color-mix(in srgb, var(--glow-color) 12%, transparent);
+}
+.game-card:active { transform: translateY(-2px) scale(1.005); }
+.game-card .image-box { flex: 1; }
+.hero-left .image-box, .tall-card .image-box { position: relative; width: 100%; height: 100%; min-height: 260px; }
+.small .image-box, .g3-card .image-box, .g4-card .image-box, .genre-card .image-box, .wide-card .image-box { position: relative; width: 100%; padding-top: 58%; }
+.game-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .55s var(--ease); }
+.game-card:hover .game-img { transform: scale(1.08); }
+.overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+.overlay::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(9,14,40,1) 0%, rgba(9,14,40,0.82) 32%, rgba(9,14,40,0.1) 62%, transparent 100%); opacity: 0; transition: opacity .45s var(--ease); z-index: 0; }
+.game-card:hover .overlay::before { opacity: 1; }
+.card-content { position: relative; z-index: 1; }
+.crown-badge { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; align-items: center; gap: 5px; background: linear-gradient(135deg, rgba(255,180,0,0.22), rgba(255,120,0,0.18)); border: 1px solid rgba(255,190,0,0.45); border-radius: 20px; padding: 4px 9px 4px 6px; backdrop-filter: blur(6px); box-shadow: 0 0 14px rgba(255,160,0,0.25); animation: crownPop .4s cubic-bezier(.4,0,.2,1) both; }
+.crown-badge svg { width: 13px; height: 13px; flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(255,200,0,0.6)); }
+.crown-badge span { font-size: 10px; font-weight: 900; letter-spacing: .8px; text-transform: uppercase; color: #ffd54f; line-height: 1; }
+@keyframes crownPop { from{opacity:0;transform:scale(0.7) translateY(-4px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.status-bar { display: flex; align-items: center; gap: 6px; }
+.like-heart { position: relative; flex-shrink: 0; font-size: 0; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; overflow: visible; }
+.like-heart svg { width: 13px; height: 13px; fill: var(--accent); position: relative; z-index: 1; }
+.like-heart::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: var(--accent); opacity: 0; animation: heartpulse 2.4s ease-out infinite; }
+@keyframes heartpulse { 0%{transform:scale(0.6);opacity:.5} 70%{transform:scale(2.2);opacity:0} 100%{transform:scale(2.2);opacity:0} }
+.like-text { color: #7da4ff; font-size: 11px; font-weight: 700; letter-spacing: .4px; }
+.hero-left .title, .tall-card .title { font-size: 26px; font-weight: 900; color: #fff; line-height: 1.1; text-shadow: 0 2px 18px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,1); }
+.small .title, .g3-card .title, .g4-card .title, .genre-card .title, .wide-card .title { font-size: 14px; font-weight: 800; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,1), 0 2px 16px rgba(0,0,0,0.9); }
+.tag-row { display: grid; grid-template-rows: 0fr; opacity: 0; margin-top: 0; transition: grid-template-rows .28s cubic-bezier(.4,0,.2,1), opacity .22s cubic-bezier(.4,0,.2,1), margin-top .28s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+.tag-row-inner { overflow: hidden; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.game-card:hover .tag-row { grid-template-rows: 1fr; opacity: 1; margin-top: 7px; }
+.tag-chip { font-size: 10px; font-weight: 700; letter-spacing: .4px; padding: 3px 8px; border-radius: 20px; background: color-mix(in srgb, var(--glow-color) 15%, transparent); border: 1px solid color-mix(in srgb, var(--glow-color) 35%, transparent); color: color-mix(in srgb, var(--glow-color) 90%, #fff); white-space: nowrap; }
+.genre-view-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.genre-view-icon-wrap { width: 44px; height: 44px; border-radius: 10px; background: rgba(79,124,255,0.15); border: 1px solid rgba(79,124,255,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.genre-view-title { font-size: 22px; font-weight: 900; color: #fff; }
+.genre-view-count { font-size: 12px; color: var(--text-dim); margin-top: 2px; font-weight: 500; }
+.empty-state { text-align: center; padding: 60px 0; color: var(--text-dim); }
+.empty-icon { margin-bottom: 14px; }
+.empty-icon svg { width: 38px; height: 38px; fill: none; stroke: #33334a; stroke-width: 1.5; stroke-linecap: round; }
+.empty-state p { font-size: 14px; font-weight: 500; }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+.anim-section { animation: fadeUp .42s var(--ease) both; }
+#game-overlay { display: none; position: fixed; inset: 0; z-index: 9000; background: #090e21; flex-direction: column; }
+#game-overlay.active { display: flex; }
+@keyframes overlayEnter { from{opacity:0;transform:translateY(40px) scale(0.982);filter:blur(8px)} to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)} }
+@keyframes overlayExit { 0%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)} 20%{opacity:1;transform:translateY(6px) scale(0.997);filter:blur(0)} 100%{opacity:0;transform:translateY(72px) scale(0.955);filter:blur(10px)} }
+#game-overlay.entering { animation: overlayEnter .38s var(--ease) both; }
+#game-overlay.exiting  { animation: overlayExit .4s cubic-bezier(.4,0,1,1) both; pointer-events: none; }
+#game-frame-wrap { flex: 1; position: relative; overflow: hidden; background: #000; }
+#game-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: #000; }
+#game-topbar { display: flex; align-items: center; gap: 12px; padding: 0 20px; height: 54px; flex-shrink: 0; background: rgba(8,12,34,0.98); border-top: 1px solid rgba(79,124,255,0.14); transition: height .3s var(--ease), opacity .3s, padding .3s; overflow: hidden; order: 2; backdrop-filter: blur(12px); }
+#game-topbar.collapsed { height: 0; opacity: 0; pointer-events: none; }
+.gbar-back { display: flex; align-items: center; gap: 6px; background: rgba(79,124,255,0.12); border: 1px solid rgba(79,124,255,0.25); color: #7da4ff; font-size: 12px; font-weight: 700; font-family: inherit; padding: 7px 13px; border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: background .2s, transform .15s; }
+.gbar-back:hover { background: rgba(79,124,255,0.22); transform: translateX(-2px); }
+.gbar-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+.gbar-logo-wrap { width: 26px; height: 26px; flex-shrink: 0; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.gbar-logo-wrap img { width: 26px; height: 26px; object-fit: cover; display: block; opacity: .9; }
+.gbar-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
+.gbar-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.9); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gbar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.gbar-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s, border-color .2s, color .2s, transform .15s; }
+.gbar-btn:hover { background: rgba(255,255,255,0.09); color: #fff; transform: translateY(-1px); }
+.gbar-btn.liked { background: rgba(79,124,255,0.18); border-color: rgba(79,124,255,0.4); color: #7da4ff; }
+.gbar-btn.disliked { background: rgba(255,80,80,0.12); border-color: rgba(255,80,80,0.35); color: #ff6b6b; }
+.gbar-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+.gbar-btn.icon-only { padding: 7px; }
+.gbar-btn.icon-only svg { width: 15px; height: 15px; }
+#bar-toggle { position: absolute; bottom: 10px; right: 14px; z-index: 100; display: flex; align-items: center; gap: 5px; background: rgba(8,12,34,0.82); border: 1px solid rgba(79,124,255,0.22); border-radius: 20px; padding: 5px 11px 5px 8px; cursor: pointer; backdrop-filter: blur(10px); color: #7da4ff; font-size: 11px; font-weight: 700; font-family: 'Inter',sans-serif; opacity: 0.5; transition: opacity .2s, background .2s; user-select: none; }
+#bar-toggle:hover { opacity: 1; background: rgba(20,30,70,0.95); }
+#bar-toggle svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; transition: transform .3s var(--ease); }
+#bar-toggle.collapsed svg { transform: rotate(180deg); }
+
+/* ── LOADING SCREEN ── */
+#ls-overlay {
+    position: absolute; inset: 0; z-index: 8999;
+    background: #090e21;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    transition: opacity 0.5s ease;
+    pointer-events: all;
+    overflow: hidden;
+}
+#ls-overlay.ls-fade-out { opacity: 0; pointer-events: none; }
+#ls-bg {
+    position: absolute; inset: -50px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(30px) brightness(0.32) saturate(1.3);
+    transform-origin: center center;
+    animation: lsBgRock 9s ease-in-out infinite;
+    z-index: 0;
+}
+@keyframes lsBgRock {
+    0%   { transform: rotate(-1.8deg) scale(1.1); }
+    50%  { transform: rotate(1.8deg)  scale(1.14); }
+    100% { transform: rotate(-1.8deg) scale(1.1); }
+}
+#ls-overlay.ls-fade-out #ls-bg { animation-play-state: paused; }
+.ls-thumb {
+    width: 220px; height: 148px;
+    border-radius: 14px; overflow: hidden;
+    border: 2px solid rgba(79,124,255,0.3);
+    margin-bottom: 20px; background: #0d1530;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+}
+.ls-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ls-game-name {
+    font-size: 22px; font-weight: 900;
+    color: #fff; margin-bottom: 22px;
+    text-align: center; letter-spacing: 0.2px;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.9);
+    position: relative; z-index: 1;
+}
+.ls-bar-wrap {
+    width: 320px; height: 9px;
+    background: rgba(26,35,80,0.8);
+    border-radius: 99px; overflow: hidden;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+}
+.ls-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #3a66e0, #4f7cff, #7da4ff);
+    border-radius: 99px;
+}
+.ls-pct {
+    font-size: 13px; font-weight: 700;
+    color: #a0b4d8; letter-spacing: 0.4px;
+    position: relative; z-index: 1;
+}
+.ls-tip {
+    margin-top: 24px;
+    font-size: 12px; font-weight: 500;
+    color: #8090b8; text-align: center;
+    max-width: 300px; line-height: 1.5;
+    position: relative; z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<div id="site-topbar">
+  <a class="topbar-logo-wrap" href="#">
+    <div class="topbar-logo-img-wrap">
+      <img src="https://i.imgur.com/89sJzAy.png" alt="Logo" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div class="topbar-site-name">
+      <span>Invisible</span>
+      <span>Site</span>
+    </div>
+  </a>
+  <div class="topbar-search-wrap">
+    <span class="topbar-search-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+    </span>
+    <input class="topbar-search" id="search-input" type="text" placeholder="Search games…" autocomplete="off"
+      oninput="handleSearchInput(this.value)" onkeydown="handleSearchKey(event)" onfocus="showDropdown()">
+    <div id="search-dropdown"></div>
+  </div>
+</div>
+
+<div id="game-overlay">
+  <div id="game-frame-wrap">
+    <div id="bar-toggle" onclick="toggleBar()">
+      <svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>
+      <span id="toggle-label">Hide bar</span>
+    </div>
+    <div id="ls-overlay">
+      <div id="ls-bg"></div>
+      <div class="ls-thumb"><img id="ls-img" src="" alt=""></div>
+      <div class="ls-game-name" id="ls-name"></div>
+      <div class="ls-bar-wrap"><div class="ls-bar-fill" id="ls-fill"></div></div>
+      <div class="ls-pct" id="ls-pct">0%</div>
+      <div class="ls-tip" id="ls-tip">Loading game assets…</div>
+    </div>
+    <iframe id="game-iframe" src="about:blank" allowfullscreen allow="fullscreen *"></iframe>
+  </div>
+  <div id="game-topbar">
+    <button class="gbar-back" onclick="closeGame()">
+      <svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg>
+      Back
+    </button>
+    <div class="gbar-logo-wrap">
+      <img src="https://i.imgur.com/89sJzAy.png" alt="Logo" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div class="gbar-divider"></div>
+    <span class="gbar-name" id="gbar-name">Game</span>
+    <div class="gbar-actions">
+      <button class="gbar-btn" id="gbar-like" onclick="doVote('like')">
+        <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        <span id="gbar-like-count">—</span>
+      </button>
+      <button class="gbar-btn" id="gbar-dis" onclick="doVote('dis')">
+        <svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+        <span id="gbar-dis-count">—</span>
+      </button>
+      <button class="gbar-btn" id="gbar-share" onclick="doShare()">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span id="gbar-share-label">Share</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="page-root">
+<div class="layout">
+<div class="left-col">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-toggle" onclick="toggleSidebar()">
+      <span class="sidebar-toggle-label">Categories</span>
+      <span class="toggle-arrow">
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="12" height="12"><polyline points="8,2 4,6 8,10"/></svg>
+      </span>
+    </div>
+    <div class="genre-list">
+      <div class="genre-item active" data-genre="all" data-label="All Games" onclick="setGenre('all',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="8" y1="12" x2="12" y2="12"/><line x1="10" y1="10" x2="10" y2="14"/><circle cx="17" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="19.5" cy="13" r="1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="genre-label">All Games</span>
+      </div>
+      <div class="genre-item" data-genre="io" data-label=".IO Games" onclick="setGenre('io',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-4 4-4 14 0 18M12 3c4 4 4 14 0 18"/></svg></span>
+        <span class="genre-label">.IO Games</span>
+      </div>
+      <div class="genre-item" data-genre="shooter" data-label="Shooter" onclick="setGenre('shooter',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/></svg></span>
+        <span class="genre-label">Shooter</span>
+      </div>
+      <div class="genre-item" data-genre="racing" data-label="Racing" onclick="setGenre('racing',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h16l2 4-2 6H5z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></span>
+        <span class="genre-label">Racing</span>
+      </div>
+      <div class="genre-item" data-genre="casual" data-label="Casual" onclick="setGenre('casual',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
+        <span class="genre-label">Casual</span>
+      </div>
+      <div class="genre-item" data-genre="puzzle" data-label="Puzzle" onclick="setGenre('puzzle',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"/></svg></span>
+        <span class="genre-label">Puzzle</span>
+      </div>
+      <div class="genre-item" data-genre="survival" data-label="Survival" onclick="setGenre('survival',this)">
+        <span class="genre-icon"><svg viewBox="0 0 24 24"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z"/><polyline points="8,12 10,14 13,10 15,12"/></svg></span>
+        <span class="genre-label">Survival</span>
+      </div>
+    </div>
+  </div>
+  <div class="announce-box" id="announce-box" style="display:none">
+    <div class="announce-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#4f7cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Admin</span>
+    </div>
+    <div class="announce-msg" id="announce-msg"></div>
+    <div class="announce-img-wrap" id="announce-img-wrap" style="display:none">
+      <img class="announce-img" id="announce-img" src="" alt="Announcement image">
+    </div>
+    <div class="poll-options" id="poll-options"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="content"></div>
+  <footer id="site-footer" style="margin-top:36px;padding:20px 24px;background:#0e1736;border-radius:14px;border:1px solid rgba(255,255,255,0.05);text-align:center;opacity:0;transition:opacity 0.6s ease;">
+    <div style="font-size:14px;font-weight:700;color:#fff;font-family:'Inter',sans-serif;margin-bottom:4px;">© Sapling 2023–2026</div>
+    <div style="font-size:12px;font-weight:600;color:#4f5fa8;font-family:'Inter',sans-serif;font-style:italic;">All Branding Rights Reserved, Invisible Site 2.0</div>
+  </footer>
+</div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, onSnapshot, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+    apiKey:"AIzaSyBfNS4xM9r5IqlZrshgC9D4koDtv4w8JsQ",
+    authDomain:"invisible-site-2ba47.firebaseapp.com",
+    projectId:"invisible-site-2ba47",
+    storageBucket:"invisible-site-2ba47.firebasestorage.app",
+    messagingSenderId:"605018040016",
+    appId:"1:605018040016:web:bd806b25a0c9e0f99ca0d5"
+});
+const db = getFirestore(app);
+
+const GAMES = [
+    { id:'bloxd',      name:'Bloxd.io',           showOnFrontPage: true,   url:'https://bloxd.io',                                                        img:'https://imgs.crazygames.com/bloxdhop-io_16x9/20250829023851/bloxdhop-io_16x9-cover?metadata=none&quality=60&height=7609', genres:['io','survival'],               tags:['Multiplayer','Building','Battle'] },
+    { id:'veck',       name:'Veck.IO',             showOnFrontPage: true,  url:'https://veck.io',                                                         img:'https://veckio.io/data/image/posts/veck-io-banner1.jpg',                                                               genres:['io','survival'],               tags:['Multiplayer','.IO'] },
+    { id:'lolbeans',   name:'LOLBeans',            showOnFrontPage: true,  url:'https://lolbeans.io/',                                                    img:'https://yt3.googleusercontent.com/ytc/AIdro_myLc0_xlmBlAYAyJPuzIsb05JRiN96iAMF-zRIuwuIeQ=s900-c-k-c0x00ffffff-no-rj',                         genres:['io','casual'],      tags:['Racing','Casual','.IO','Funny'] },
+    { id:'deadshot',   name:'Deadshot',            showOnFrontPage: true,  url:'https://deadshot.io',                                                     img:'https://deadshot.io/promo/thumbnail.png',                                                                              genres:['shooter'],          tags:['Shooter','FPS','Multiplayer'] },
+    { id:'smashkarts', name:'Smash Karts',         showOnFrontPage: true,  url:'https://smashkarts.io',                                                   img:'https://imgs.crazygames.com/smash-karts_16x9/20260210123937/smash-karts_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop',       genres:['io','racing'],      tags:['Racing','.IO','Multiplayer','Action'] },
+    { id:'zombsroyale',name:'ZombsRoyale.io',      showOnFrontPage: true,  url:'https://zombsroyale.io/',                                                 img:'https://imgs.crazygames.com/games/zombsroyaleio/cover-1587299840102.png?format=auto&quality=70&metadata=none',         genres:['io','shooter'],     tags:['Battle Royale','.IO','Shooter','Multiplayer'] },
+    { id:'stack',      name:'STACK',               showOnFrontPage: true,  url:'https://www.coolmathgames.com/sites/default/files/public_games/50382/',   img:'https://androidcommunity.com/wp-content/uploads/2016/02/featured-stack.jpg',                                           genres:['casual'],           tags:['Casual','Puzzle'] },
+    { id:'snub',       name:'Snub Browser',        showOnFrontPage: false, url:'https://browse.therealsnubby.com/',                                       img:'https://i.imgur.com/V9f9mqS.png',                                                                                      genres:['casual'],           tags:['Utility','Casual'] },
+    { id:'shell',      name:'Shell Shockers',      showOnFrontPage: true,  url:'https://shellshock.io',                                                   img:'https://imgs.crazygames.com/shellshockersio_16x9/20260203211252/shellshockersio_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['shooter'],          tags:['Shooter','FPS','Multiplayer'] },
+    { id:'subway',     name:'Subway Surfers',      showOnFrontPage: true,  url:'https://files.ufreegame.net/1024/Subway-Surfers-Zurich/',                 img:'https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/img_9060.jpeg',               genres:['casual'],           tags:['Runner','Casual'] },
+    { id:'digdig',     name:'Digdig.io',           showOnFrontPage: true,  url:'https://digdig.io/',                                                      img:'https://www.gamekarma.com/images/games/1002.png',                                                                      genres:['io','survival'],    tags:['.IO','Multiplayer'] },
+    { id:'jumpshell',  name:'Jumping Shell',       showOnFrontPage: true,  url:'https://freetoplayz.github.io/jumping-shell/',                            img:'https://jumpingshellgame.github.io/images/logo.png',                                                                   genres:['casual','puzzle'],  tags:['Casual','Puzzle','Brain Game'] },
+    { id:'freezeria',  name:'Papas Freezeria',     showOnFrontPage: false, url:'https://www.coolmathgames.com/sites/default/files/public_games/48987/',   img:'https://www.coolmathgames.com/sites/default/files/PapasFreezeria_OG-logo.jpg',                                         genres:['casual'],           tags:['Casual','Cooking','Classic'] },
+    { id:'monkeymart', name:'Monkey Mart',         showOnFrontPage: true,  url:'https://jasongamesdev.github.io/monkey-mart/',                            img:'https://blockblastunblocked.com/_next/static/media/monkey_mart_why_play_1.40cf50aa.png',                               genres:['casual'],           tags:['Casual','Idle','Management'] },
+    { id:'drivemad',   name:'Drive Mad',           showOnFrontPage: true,  url:'https://gamecollections.me/game/3kh0-assets-main/drive-mad/',             img:'https://play-lh.googleusercontent.com/4-7O5Vo6EorRcn2ZGndNzwzaPLBbR4LfVEP0gBspwV3S1tVHouunOoyDTV5Ij7bYXS0=w526-h296-rw', genres:['racing','casual','puzzle'], tags:['Racing','Casual','Puzzle','Physics'] },
+    { id:'snake',      name:'Snake',               showOnFrontPage: true,  url:'https://googlesnakemods.com/v/current/',                                  img:'https://cdn2.pog.com/cloudimage/342343/file/w380h285_retina_webp-9647dee8926d91a5853d9f8c1542732c.webp',               genres:['casual'],           tags:['Casual','Classic','Arcade'] },
+    { id:'hexanaut',   name:'Hexanaut.io',         showOnFrontPage: true,  url:'https://hexanaut.io/',                                                    img:'https://imgs.crazygames.com/games/hexanaut-io/cover-1647616033546.png?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['io'],          tags:['Casual','Classic','IO'] },
+    { id:'helpnobrake',name:'HELP! NO BRAKE!',     showOnFrontPage: false, url:'https://itch.io/embed-upload/6749357',                                    img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531960/capsule_616x353.jpg?t=1718326546',          genres:['racing','casual','puzzle'], tags:['Puzzle','Racing','Car'] },
+    { id:'fnaf',       name:"FNAF 1",              showOnFrontPage: false, url:'https://run3.io/popgame/fnaf/fnaf1/',                                     img:'https://i.redd.it/5xpa2xnwsflb1.jpg',                                                                                  genres:['puzzle','survival'],tags:['Survival','Horror','Puzzle'] },
+    { id:'fnaf2',      name:"FNAF 2",              showOnFrontPage: false, url:'https://run3.io/popgame/fnaf/fnaf2.html',                                 img:'https://store-images.s-microsoft.com/image/apps.60385.13578174030071833.ced2a7cf-09b3-4d12-8621-229829d1aa41.66df75dd-fd3d-46de-8a85-5278023c30a2?q=90&w=480&h=270', genres:['puzzle','survival'], tags:['Survival','Horror','Puzzle'] },
+    { id:'fnaf3',      name:"FNAF 3",              showOnFrontPage: false, url:'https://run3.io/popgame/fnaf/fnaf3.html',                                 img:'https://upload.wikimedia.org/wikipedia/en/2/2b/FNAF3Artwork.png',                                                       genres:['puzzle','survival'],tags:['Survival','Horror','Puzzle'] },
+    { id:'fnaf4',      name:"FNAF 4",              showOnFrontPage: false, url:'https://run3.io/popgame/fnaf/fnaf4.html',                                 img:'https://upload.wikimedia.org/wikipedia/en/d/de/FNAF4Artwork.png',                                                       genres:['puzzle','survival'],tags:['Survival','Horror','Puzzle'] },
+    { id:'yohoho',     name:"YoHoHo.io",           showOnFrontPage: true,  url:'https://yohoho.io/',                                                      img:'https://yohoho.io/img/banner1200x630.jpg',                                                                              genres:['casual','survival','io'], tags:['Royale','Battling','Fun'] },
+    { id:'retrobowl',  name:'Retro Bowl',          showOnFrontPage: false, url:'https://game316009.konggames.com/gamez/0031/6009/live/index.html',        img:'https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch/70010000048336/e3c1297d2ec30fe72a657af60c416d10c68a784bc874cf28e19cdf9261956919', genres:['puzzle','casual'], tags:['Puzzle','Casual','Sports','Retro'] },
+    { id:'spacewave',  name:'Space Wave',          showOnFrontPage: true,  url:'https://crazygames.cdn.msnfun.com/9nm5764dbppg/v8/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwMUQ5MzQ0Q0RDNTU2ODUzM0ExODIyRjZERDZBNjkwMCIsImxvY2FsZSI6ImVuLXVzIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6IjlubTU3NjRkYnBwZyIsInZhbHVlIjp7fX19', img:'https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg', genres:['puzzle','casual'], tags:['Puzzle','Casual','Retro'] },
+    { id:'upwarp',     name:'Upwarp',              showOnFrontPage: true,  url:'https://h5.meegames.com/games/9646486834/upwarp/index.html',              img:'https://img.arcadrome.com/7529ad66-d516-48b9-a6a9-80af0db67076/banner.png',                                            genres:['puzzle'],           tags:['Puzzle','Platformer','Brain Game'] },
+    { id:'poorbunny',  name:'POOR BUNNY!',         showOnFrontPage: true,  url:'https://poorbunny2.io/game/PoorBunny/',                                   img:'https://poorbunnygame.com/data/image/posts/poor-bunny3.png',                                                           genres:['casual','survival'], tags:['Action','Platformer','2 Player'] },
+    { id:'StickmanC2', name:'Stickman Climb! 2',   showOnFrontPage: true,  url:'https://game.enjoy4fun.com/stickmanclimb2/v1/index.html?uid=cb7u1g6rsfesr7vv63d0&amp;channel-id=3487216655', img:'https://i.ytimg.com/vi/uaNjMad_T-k/maxresdefault.jpg', genres:['casual'],  tags:['Stickman','Obstacles','Climbing'] },
+    { id:'littlealchemy2', name:'Little Alchemy 2',showOnFrontPage: true,  url:'https://littlealchemy2.com/',                                             img:'https://littlealchemy2.com/static/img/little-alchemy-2-fb-thumbnail.jpg',                                              genres:['casual'],           tags:['Creative','Casual','Forming'] },
+    { id:'gulper',     name:'Gulper.io',           showOnFrontPage: true,  url:'https://gulper.io/',                                                      img:'https://imgs.crazygames.com/games/gulper-io/cover_16x9-1722864711255.png?metadata=none&quality=60&height=5227',        genres:['io','survival'],    tags:['Snake','IO','Pvp'] },
+    { id:'squarebird', name:'Square Bird',         showOnFrontPage: true,  url:'https://tech-sapling.github.io/squarebird/',                              img:'https://tcf.admeen.org/game/17500/17217/400x246/square-bird.webp',                                                     genres:['puzzle','casual'],  tags:['Strategy','Mobile','Fun'] },
+    { id:'redball4',   name:'Red Ball 4',          showOnFrontPage: false, url:'https://tech-sapling.github.io/redball4/',                                img:'https://www.fdg-entertainment.com/wp-content/uploads/2017/07/red-ball-4-tile-1920x0-c-default.jpg',                    genres:['puzzle','casual'],  tags:['Platformer','Fun','Levels'] },
+    { id:'tribalsio',  name:'Tribals.io',          showOnFrontPage: true,  url:'https://tribals.io/',                                                     img:'https://cdn.webgamer.io/games/tribals-io/tribals-io.1280x.85pc.webp',                                                  genres:['survival','io'],    tags:['Exploration','Survival','Multiplayer'] },
+    { id:'soccerskills', name:'Soccer Skills',     showOnFrontPage: false, url:'https://23azostore.github.io/s6/soccer-skills-champions-league/',         img:'https://adminpunit.unblockedgames66.io/bgames/game_image/1740499797soccer-skills-champions-league.webp',               genres:['puzzle','casual'],  tags:['Sports','Soccer','Fun'] },
+    { id:'stickmanh',  name:'Stickman Hook',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/stickman-hook/',                         img:'https://geometry-games.io/data/image/game/stickman-hook/stickman-hook.png',                                            genres:['casual'],           tags:['Stickman','Platformer','Levels'] },
+    { id:'sandboxels', name:'SandBoxels',          showOnFrontPage: false, url:'https://cdn.startmyeducation.net/sandboxels/',                            img:'https://neal.fun/sandboxels/share-card.png',                                                                           genres:['casual'],           tags:['SandBox','Pixels','Interactive'] },
+    { id:'basketrand', name:'Basket Random',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/basket-random/',                         img:'https://imgs.crazygames.com/basket-random_16x9/20240617090207/basket-random_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['casual'], tags:['Sports','Two Player','Basketball'] },
+    { id:'rocketgoal', name:'Rocket Goal',         showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/rocketgoal/',                            img:'https://imgs.crazygames.com/rocketgoal-io_16x9/20260108075807/rocketgoal-io_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'], tags:['Racing','Soccer','Goals'] },
+    { id:'dashmetry',  name:'Dashmetry',           showOnFrontPage: false, url:'https://1games.io/game/dashmetry/',                                       img:'https://geometrygames.io/data/image/game/dashmetry/dashmetry.png',                                                     genres:['casual'],           tags:['Tap','Arcade'] },
+    { id:'escaperoad', name:'Escape Road',         showOnFrontPage: false, url:'https://cdn.startmyeducation.net/escape-road/',                          img:'https://imgs.crazygames.com/escape-road-asm_16x9/20250724105031/escape-road-asm_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'],           tags:['Racing','Arcade'] },
+    { id:'baldisbasics', name:'Baldis Basics',     showOnFrontPage: false, url:'https://cdn.startmyeducation.net/baldi/',                                 img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1275890/header.jpg?t=1776884899',                   genres:['survival'],           tags:['Survival','Scary'] },
+    { id:'backrooms',  name:'Backrooms',           showOnFrontPage: false, url:'https://cdn.startmyeducation.net/backrooms/',                             img:'https://upload.wikimedia.org/wikipedia/en/b/b4/Backrooms_%28web_series%29.webp',                                       genres:['survival'],           tags:['Survival','Scary'] },
+    { id:'survev',     name:'Survev.io',           showOnFrontPage: false, url:'https://survev.io/',                                                      img:'https://imgs.crazygames.com/survev_16x9/20251009021953/survev_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['shooter'],           tags:['Survival','Battle Royale'] },
+    { id:'mk48',       name:'Mk48.io',             showOnFrontPage: false, url:'https://mk48.io/',                                                       img:'https://imgs.crazygames.com/mk48-io_16x9/20260219025419/mk48-io_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['shooter'],         tags:['Battleship','Pvp'] },
+    { id:'traffrider', name:'Traffic Rider',       showOnFrontPage: false, url:'https://azgames.io/traffic-rider.embed',                                  img:'https://imgs.crazygames.com/traffic-rider-vvq_16x9/20250526021507/traffic-rider-vvq_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'],         tags:['Racing','Motorcycle'] },
+    { id:'escaproad2', name:'Escape Road 2',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/escape-road_2/',                         img:'https://imgs.crazygames.com/escape-road-2_16x9/20251121100621/escape-road-2_16x9-cover?metadata=none&quality=60&height=3997', genres:['racing'],         tags:['Racing','Arcade'] },
+    { id:'worldguess', name:'WordGuessr',          showOnFrontPage: false, url:'https://www.worldguessr.com/',                                           img:'https://imgs.crazygames.com/worldguessr_16x9/20241018082520/worldguessr_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['puzzle'],         tags:['Geoguess','Guess'] },
+    { id:'racinglim',  name:'Racing Limits',       showOnFrontPage: false, url:'https://crazygames.cdn.msnfun.com/9n7hl5s06zk0/v9/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwMUQ5MzQ0Q0RDNTU2ODUzM0ExODIyRjZERDZBNjkwMCIsImxvY2FsZSI6ImVuLXVzIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6IjluN2hsNXMwNnprMCIsInZhbHVlIjp7fX19', img:'https://imgs.crazygames.com/racing-limits_16x9/20250711091800/racing-limits_16x9-cover?metadata=none&quality=60&height=3199', genres:['racing'], tags:['Racing','Driving'] },
+];
+
+const GENRE_COLORS = {
+    io:'#00e5ff', shooter:'#ff4f4f', racing:'#ff9f00', casual:'#ffd600', puzzle:'#b04fff', survival:'#00e676',
+};
+
+function getGlowColor(genres) {
+    if (!genres || genres.length === 0) return '#4f7cff';
+    if (genres.length === 1) return GENRE_COLORS[genres[0]] || '#4f7cff';
+    return GENRE_COLORS[genres[Math.floor(Math.random() * genres.length)]] || '#4f7cff';
+}
+
+const VARIANTS = ['v-a','v-b','v-c','v-d','v-e'];
+const GENRE_META = {
+    io:       { l:'.IO Games', color:'#00e5ff', svg:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-4 4-4 14 0 18M12 3c4 4 4 14 0 18"/>' },
+    shooter:  { l:'Shooter',   color:'#ff4f4f', svg:'<circle cx="12" cy="12" r="4"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/>' },
+    racing:   { l:'Racing',    color:'#ff9f00', svg:'<path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h16l2 4-2 6H5z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
+    casual:   { l:'Casual',    color:'#ffd600', svg:'<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>' },
+    puzzle:   { l:'Puzzle',    color:'#b04fff', svg:'<path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"/>' },
+    survival: { l:'Survival',  color:'#00e676', svg:'<path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z"/><polyline points="8,12 10,14 13,10 15,12"/>' },
+};
+
+let clickCounts    = {};
+let likesCounts    = {};
+let dailyCounts    = {};
+let recentlyPlayed = JSON.parse(localStorage.getItem('is_recent') || '[]');
+let currentGenre   = 'all';
+let currentSearch  = '';
+let activeGameId   = null;
+let activeVote     = null;
+let barCollapsed   = false;
+let voteUnsub      = null;
+let ddFocusIdx     = -1;
+let ddResults      = [];
+const variantMap = {};
+GAMES.forEach((g,i) => { variantMap[g.id] = VARIANTS[i % VARIANTS.length]; });
+
+renderAll();
+
+let initialLoadCount = 0;
+const totalGames = GAMES.length;
+
+GAMES.forEach(g => {
+    try {
+        onSnapshot(doc(db,'games',g.id), snap => {
+            const wasZero = !likesCounts[g.id];
+            clickCounts[g.id] = snap.exists() ? (snap.data().clicks      || 0) : 0;
+            likesCounts[g.id] = snap.exists() ? (snap.data().likes       || 0) : 0;
+            dailyCounts[g.id] = snap.exists() ? (snap.data().dailyClicks || 0) : 0;
+
+            if (wasZero && initialLoadCount < totalGames) {
+                initialLoadCount++;
+                if (initialLoadCount === totalGames) renderAll();
+            }
+
+            document.querySelectorAll(`[data-likes="${g.id}"]`).forEach(el => {
+                const n = likesCounts[g.id] || 0;
+                el.textContent = n >= 1000 ? (n/1000).toFixed(1)+'k' : n > 0 ? String(n) : '';
+            });
+        }, () => {
+            initialLoadCount++;
+            if (initialLoadCount === totalGames) renderAll();
+        });
+    } catch(e) {
+        initialLoadCount++;
+        if (initialLoadCount === totalGames) renderAll();
+    }
+});
+
+// ── LOADING SCREEN ──
+const LS_TIPS = [
+    'Loading game assets…',
+    'Connecting to sapling…',
+    'Preparing your session…',
+    'Cloaking the site…',
+    'Almost ready to play…',
+];
+
+function showLoadingScreen(game) {
+    const ov   = document.getElementById('ls-overlay');
+    const fill = document.getElementById('ls-fill');
+    const pct  = document.getElementById('ls-pct');
+    const tip  = document.getElementById('ls-tip');
+    const bg   = document.getElementById('ls-bg');
+
+    document.getElementById('ls-img').src = game.img || '';
+    document.getElementById('ls-name').textContent = game.name;
+
+    bg.style.backgroundImage = game.img ? `url(${game.img})` : 'none';
+    bg.style.animationPlayState = 'running';
+
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    pct.textContent = '0%';
+    tip.textContent = LS_TIPS[0];
+    ov.classList.remove('ls-fade-out');
+    ov.style.display = 'flex';
+
+    const duration = 10000 + Math.random() * 5000;
+    const start = performance.now();
+    let tipIdx = 0;
+
+    const tipTimer = setInterval(() => {
+        tipIdx = (tipIdx + 1) % LS_TIPS.length;
+        tip.textContent = LS_TIPS[tipIdx];
+    }, 1300);
+
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+    function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const p = Math.floor(easeInOut(t) * 100);
+        fill.style.width = p + '%';
+        pct.textContent = p + '%';
+        if (t < 1) {
+            requestAnimationFrame(tick);
+        } else {
+            clearInterval(tipTimer);
+            fill.style.width = '100%';
+            pct.textContent = '100%';
+            setTimeout(() => {
+                ov.classList.add('ls-fade-out');
+                bg.style.animationPlayState = 'paused';
+                setTimeout(() => { ov.style.display = 'none'; }, 550);
+            }, 300);
+        }
+    }
+    requestAnimationFrame(tick);
+}
+
+window.openGame = async (id) => {
+    const game = GAMES.find(g => g.id === id);
+    if (!game) return;
+    activeGameId = id;
+    activeVote   = localStorage.getItem('gvote_' + id) || null;
+    barCollapsed = false;
+
+    recentlyPlayed = [id,...recentlyPlayed.filter(i=>i!==id)].slice(0,8);
+    localStorage.setItem('is_recent', JSON.stringify(recentlyPlayed));
+
+    const sessionKey = 'playing_' + id;
+    if (!sessionStorage.getItem(sessionKey)) {
+        try {
+            const ref  = doc(db,'games',id);
+            const snap = await getDoc(ref);
+            const todayStr = new Date().toISOString().slice(0,10); // "YYYY-MM-DD"
+            if (!snap.exists()) {
+                await setDoc(ref,{clicks:1, dailyClicks:1, dailyDate:todayStr});
+            } else {
+                const d = snap.data();
+                const needsReset = d.dailyDate !== todayStr;
+                await updateDoc(ref,{
+                    clicks:      increment(1),
+                    dailyClicks: needsReset ? 1 : increment(1),
+                    dailyDate:   todayStr,
+                });
+            }
+            sessionStorage.setItem(sessionKey,'1');
+        } catch(e) {}
+    }
+
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.remove('exiting');
+    overlay.classList.add('active','entering');
+    overlay.addEventListener('animationend', () => overlay.classList.remove('entering'), { once: true });
+
+    document.body.style.overflow = 'hidden';
+    document.getElementById('gbar-name').textContent = game.name;
+
+    document.getElementById('game-topbar').classList.remove('collapsed');
+    document.getElementById('bar-toggle').classList.remove('collapsed');
+    document.getElementById('toggle-label').textContent = 'Hide bar';
+
+    showLoadingScreen(game);
+    document.getElementById('game-iframe').src = game.url;
+
+    if (voteUnsub) voteUnsub();
+    voteUnsub = onSnapshot(doc(db,'games',id), snap => {
+        const d = snap.exists() ? snap.data() : {};
+        document.getElementById('gbar-like-count').textContent = d.likes    ?? '0';
+        document.getElementById('gbar-dis-count').textContent  = d.dislikes ?? '0';
+        document.getElementById('gbar-like').classList.toggle('liked',    activeVote==='like');
+        document.getElementById('gbar-dis').classList.toggle('disliked',  activeVote==='dis');
+    });
+
+    hideDropdown();
+};
+
+window.closeGame = async () => {
+    if (voteUnsub) { voteUnsub(); voteUnsub = null; }
+    activeGameId = null;
+    if (document.fullscreenElement) { try { await document.exitFullscreen(); } catch(e){} }
+
+    const lsOv = document.getElementById('ls-overlay');
+    const lsBg = document.getElementById('ls-bg');
+    lsOv.style.display = 'none';
+    lsOv.classList.remove('ls-fade-out');
+    lsBg.style.animationPlayState = 'paused';
+
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.remove('entering');
+    overlay.classList.add('exiting');
+    overlay.addEventListener('animationend', () => {
+        overlay.classList.remove('active','exiting');
+        document.getElementById('game-iframe').src = 'about:blank';
+        document.body.style.overflow = '';
+    }, { once: true });
+};
+
+window.toggleBar = () => {
+    barCollapsed = !barCollapsed;
+    document.getElementById('game-topbar').classList.toggle('collapsed', barCollapsed);
+    document.getElementById('bar-toggle').classList.toggle('collapsed', barCollapsed);
+    document.getElementById('toggle-label').textContent = barCollapsed ? 'Show bar' : 'Hide bar';
+};
+
+window.doVote = async (type) => {
+    if (!activeGameId) return;
+    const prev = activeVote;
+    activeVote = prev === type ? null : type;
+    localStorage.setItem('gvote_' + activeGameId, activeVote || '');
+    document.getElementById('gbar-like').classList.toggle('liked',    activeVote==='like');
+    document.getElementById('gbar-dis').classList.toggle('disliked',  activeVote==='dis');
+    try {
+        const delta = {};
+        if (prev==='like')        delta.likes    = increment(-1);
+        if (prev==='dis')         delta.dislikes = increment(-1);
+        if (activeVote==='like')  delta.likes    = increment(1);
+        if (activeVote==='dis')   delta.dislikes = increment(1);
+        const ref = doc(db,'games',activeGameId);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) await setDoc(ref,{likes:0,dislikes:0,...delta});
+        else if (Object.keys(delta).length) await updateDoc(ref,delta);
+    } catch(e) {}
+};
+
+window.doShare = () => {
+    const url = 'https://sites.google.com/view/lohost/';
+    navigator.clipboard.writeText(url).then(() => {
+        const lbl = document.getElementById('gbar-share-label');
+        const btn = document.getElementById('gbar-share');
+        lbl.textContent = 'Copied!';
+        btn.style.borderColor = 'rgba(0,230,118,0.5)';
+        btn.style.color = '#00e676';
+        setTimeout(() => { lbl.textContent = 'Share'; btn.style.borderColor=''; btn.style.color=''; }, 2000);
+    }).catch(() => window.prompt('Copy this link:', url));
+};
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('game-overlay').classList.contains('active') && !document.fullscreenElement)
+        closeGame();
+});
+
+const ddEl = document.getElementById('search-dropdown');
+const searchEl = document.getElementById('search-input');
+
+function highlightMatch(name, q) {
+    if (!q) return name;
+    const idx = name.toLowerCase().indexOf(q.toLowerCase());
+    if (idx === -1) return name;
+    return name.slice(0,idx) + '<mark>' + name.slice(idx, idx+q.length) + '</mark>' + name.slice(idx+q.length);
+}
+
+function renderDropdown(q) {
+    const trimmed = q.trim().toLowerCase();
+    if (!trimmed) { ddResults = []; hideDropdown(); return; }
+    ddResults = GAMES.filter(g =>
+        g.name.toLowerCase().includes(trimmed) ||
+        g.genres.some(gn => gn.includes(trimmed)) ||
+        (g.tags||[]).some(t => t.toLowerCase().includes(trimmed))
+    ).slice(0, 6);
+    if (ddResults.length === 0) {
+        ddEl.innerHTML = `<div class="dd-empty">No results for "<strong style="color:#c5d0f0">${q}</strong>"</div>`;
+    } else {
+        ddEl.innerHTML = ddResults.map((g, i) => {
+            const genre = g.genres[0] || '';
+            return `<div class="dd-item" data-idx="${i}" onmousedown="pickDropdown('${g.id}')">
+                <span class="dd-item-name">${highlightMatch(g.name, trimmed)}</span>
+                <span class="dd-item-genre">${genre}</span>
+            </div>`;
+        }).join('');
+    }
+    ddFocusIdx = -1;
+    ddEl.classList.add('visible');
+}
+
+function hideDropdown() { ddEl.classList.remove('visible'); ddFocusIdx = -1; }
+
+function setDdFocus(idx) {
+    const items = ddEl.querySelectorAll('.dd-item');
+    items.forEach(el => el.classList.remove('focused'));
+    if (idx >= 0 && idx < items.length) { items[idx].classList.add('focused'); items[idx].scrollIntoView({ block:'nearest' }); }
+    ddFocusIdx = idx;
+}
+
+window.pickDropdown = (id) => { hideDropdown(); searchEl.value = ''; currentSearch = ''; openGame(id); };
+window.showDropdown = () => { if (searchEl.value.trim()) renderDropdown(searchEl.value); };
+window.handleSearchInput = (v) => { currentSearch = v; renderDropdown(v); renderAll(); };
+window.handleSearchKey = (e) => {
+    const items = ddEl.querySelectorAll('.dd-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); setDdFocus(Math.min(ddFocusIdx + 1, items.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setDdFocus(Math.max(ddFocusIdx - 1, 0)); }
+    else if (e.key === 'Enter') { if (ddFocusIdx >= 0 && ddResults[ddFocusIdx]) { e.preventDefault(); pickDropdown(ddResults[ddFocusIdx].id); } }
+    else if (e.key === 'Escape') { hideDropdown(); }
+};
+document.addEventListener('mousedown', (e) => { if (!e.target.closest('.topbar-search-wrap')) hideDropdown(); });
+
+function mkCard(g, wrapCls, isTop=false) {
+    const v = variantMap[g.id] || 'v-a';
+    const likes = likesCounts[g.id] || 0;
+    const likeLabel = likes >= 1000 ? (likes/1000).toFixed(1)+'k' : likes > 0 ? String(likes) : '';
+    const crown = isTop ? `<div class="crown-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 17L6 7L12 13L18 7L21 17H3Z" fill="#FFD700" stroke="#FFA000" stroke-width="1.2" stroke-linejoin="round"/><circle cx="3" cy="17" r="1.5" fill="#FFD700"/><circle cx="21" cy="17" r="1.5" fill="#FFD700"/><circle cx="12" cy="13" r="1.5" fill="#FFD700"/><line x1="3" y1="19" x2="21" y2="19" stroke="#FFA000" stroke-width="1.5" stroke-linecap="round"/></svg><span>Hot</span></div>` : '';
+    const tags = (g.tags||[]).map(t => `<span class="tag-chip">${t}</span>`).join('');
+    const glowColor = getGlowColor(g.genres);
+
+    return `<div class="${wrapCls}"><div class="game-card ${v}" data-genre="${g.genres[0]||''}" style="--glow-color:${glowColor}" onclick="openGame('${g.id}')"><div class="image-box">${crown}<img src="${g.img}" alt="${g.name}" class="game-img" loading="lazy"><div class="overlay"><div class="card-content"><h1 class="title">${g.name}</h1><div class="tag-row"><div class="tag-row-inner"><div class="status-bar"><div class="like-heart"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><span class="like-text" data-likes="${g.id}">${likeLabel}</span></div>${tags}</div></div></div></div></div></div></div>`;
+}
+
+function mkCardPlays(g, wrapCls) {
+    const v = variantMap[g.id] || 'v-a';
+    const plays = dailyCounts[g.id] || 0;
+    const playsLabel = plays >= 1000 ? (plays/1000).toFixed(1)+'k' : String(plays);
+    const tags = (g.tags||[]).map(t => `<span class="tag-chip">${t}</span>`).join('');
+    const glowColor = getGlowColor(g.genres);
+    return `<div class="${wrapCls}"><div class="game-card ${v}" data-genre="${g.genres[0]||''}" style="--glow-color:${glowColor}" onclick="openGame('${g.id}')"><div class="image-box"><img src="${g.img}" alt="${g.name}" class="game-img" loading="lazy"><div class="overlay"><div class="card-content"><h1 class="title">${g.name}</h1><div class="tag-row"><div class="tag-row-inner"><div class="status-bar"><div class="like-heart"><svg viewBox="0 0 24 24" fill="none" stroke="#ffd600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><span class="like-text" style="color:#ffd600">${playsLabel} plays today</span></div>${tags}</div></div></div></div></div></div></div>`;
+}
+
+function mkHeader(title, imgSrc, pill, accentColor) {
+    const col = accentColor || 'var(--accent)';
+    return `<div class="section-header"><div class="header-content" style="border-left-color:${col}">${imgSrc?`<img src="${imgSrc}" class="header-img">`:''}
+        <div class="header-overlay"></div>
+        <div class="header-badge"><span class="header-title">${title}</span>${pill?`<span class="header-pill" style="background:${col}22;color:${col};border-color:${col}55">${pill}</span>`:''}</div>
+    </div></div>`;
+}
+
+function renderAll() {
+    const q = currentSearch.toLowerCase().trim();
+    const genre = currentGenre;
+    let html = '';
+
+    if (q) {
+        const res = GAMES.filter(g => g.name.toLowerCase().includes(q) || g.genres.some(gn=>gn.includes(q)));
+        html = res.length
+            ? `<div class="grid-3 anim-section">${res.map(g=>mkCard(g,'g3-card')).join('')}</div>`
+            : `<div class="empty-state anim-section"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></div><p>No results for <strong style="color:#fff">"${q}"</strong></p></div>`;
+        document.getElementById('content').innerHTML = html;
+        return;
+    }
+
+    if (genre !== 'all') {
+        const res = GAMES.filter(g=>g.genres.includes(genre));
+        const meta = GENRE_META[genre];
+        html = `<div class="genre-view-header anim-section"><div class="genre-view-icon-wrap" style="background:${meta.color}1a;border-color:${meta.color}44"><svg viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">${meta.svg}</svg></div><div><div class="genre-view-title">${meta.l}</div><div class="genre-view-count">${res.length} game${res.length!==1?'s':''}</div></div></div>`;
+        html += res.length
+            ? `<div class="grid-3 anim-section">${res.map(g=>mkCard(g,'genre-card')).join('')}</div>`
+            : `<div class="empty-state anim-section"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#33334a" stroke-width="1.5" stroke-linecap="round">${meta.svg}</svg></div><p>No ${meta.l} games yet</p></div>`;
+        document.getElementById('content').innerHTML = html;
+        return;
+    }
+
+    const allByLikes = [...GAMES].sort((a,b)=>(likesCounts[b.id]||0)-(likesCounts[a.id]||0));
+    const topGameId  = allByLikes[0]?.id;
+    const fyHero = allByLikes[0];
+    const fyRest = allByLikes.filter(g=>g.id!==fyHero.id);
+    html += `<div class="section anim-section">${mkHeader('For You','https://img.itch.zone/aW1nLzE5OTMwNzM2LnBuZw==/original/9xRpPp.png','Popular','#4f7cff')}<div class="grid-foryou">${mkCard(fyHero,'hero-left',true)}${fyRest.slice(0,4).map(g=>mkCard(g,'small',g.id===topGameId)).join('')}</div></div>`;
+
+    if (recentlyPlayed.length) {
+        const recG = recentlyPlayed.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean);
+        html += `<div class="section anim-section">${mkHeader('Recently Played',null,null,'#00e5ff')}<div class="grid-4">${recG.map(g=>mkCard(g,'g4-card',g.id===topGameId)).join('')}</div></div>`;
+    }
+
+    const topToday = [...GAMES]
+        .filter(g => (dailyCounts[g.id] || 0) > 0)
+        .sort((a,b) => (dailyCounts[b.id]||0) - (dailyCounts[a.id]||0))
+        .slice(0, 8);
+    if (topToday.length) {
+        html += `<div class="section anim-section">${mkHeader('Most Played Today',null,null,'#ffd600')}<div class="grid-4">${topToday.map(g=>mkCardPlays(g,'g4-card')).join('')}</div></div>`;
+    }
+
+    const frontPageGames = [...GAMES].filter(g => g.showOnFrontPage !== false);
+    const shuffled = [...frontPageGames].sort(()=>Math.random()-0.5);
+    const wideAt = new Set([0,7,14]), tallAt = new Set([3,10,17]);
+    const allCards = shuffled.map((g,i) => {
+        if (wideAt.has(i%18)) return mkCard(g,'wide-card',g.id===topGameId);
+        if (tallAt.has(i%18)) return mkCard(g,'tall-card',g.id===topGameId);
+        return mkCard(g,'g3-card',g.id===topGameId);
+    }).join('');
+    html += `<div class="section anim-section">${mkHeader('All Games',null,null,'#b04fff')}<div class="grid-mixed">${allCards}</div></div>`;
+
+    document.getElementById('content').innerHTML = html;
+}
+
+window.handleSearch  = window.handleSearchInput;
+window.renderAll     = renderAll;
+window.setGenre = (g, el) => {
+    currentGenre = g;
+    document.querySelectorAll('.genre-item').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    renderAll();
+};
+
+window.toggleSidebar = () => {
+    const sidebar   = document.getElementById('sidebar');
+    const leftCol   = sidebar.closest('.left-col');
+    const announceBox = document.getElementById('announce-box');
+
+    sidebar.classList.toggle('collapsed');
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    const w = isCollapsed ? 'var(--sidebar-col)' : 'var(--sidebar-w)';
+    leftCol.style.width    = w;
+    leftCol.style.minWidth = w;
+
+    if (announceBox && announceBox.style.display !== 'none') {
+        if (isCollapsed) {
+            announceBox.classList.add('hidden');
+        } else {
+            announceBox.classList.remove('hidden');
+        }
+    }
+};
+
+const announceRef = doc(db,'admin','board');
+onSnapshot(announceRef, snap => {
+    const box     = document.getElementById('announce-box');
+    const msgEl   = document.getElementById('announce-msg');
+    const pollEl  = document.getElementById('poll-options');
+    const imgWrap = document.getElementById('announce-img-wrap');
+    const imgEl   = document.getElementById('announce-img');
+
+    if (!snap.exists() || !snap.data().active) { box.style.display='none'; return; }
+    const data = snap.data();
+    box.style.display = 'block';
+    msgEl.textContent = data.message || '';
+
+    if (data.imageUrl) { imgEl.src = data.imageUrl; imgWrap.style.display = 'block'; }
+    else { imgWrap.style.display = 'none'; imgEl.src = ''; }
+
+    pollEl.innerHTML = '';
+    if (data.type==='poll' && data.options?.length) {
+        const VOTE_KEY = 'poll_vote_'+(data.id||'default');
+        const myVote = localStorage.getItem(VOTE_KEY);
+        const totals = data.options.map((_,i)=>data.votes?.[i]||0);
+        const total = totals.reduce((a,b)=>a+b,0)||1;
+        data.options.forEach((opt,i) => {
+            const pct = Math.round((totals[i]/total)*100);
+            const btn = document.createElement('button');
+            btn.className = 'poll-btn'+(myVote!==null?' voted':'');
+            btn.innerHTML = `<div class="poll-bar" style="width:${pct}%"></div><div class="poll-btn-label"><span>${opt}</span><span class="poll-pct">${pct}% <span style="opacity:0.55;font-weight:500">(${totals[i]})</span></span></div>`;
+            if (myVote===null) btn.onclick = async () => { localStorage.setItem(VOTE_KEY,String(i)); try { await updateDoc(announceRef,{[`votes.${i}`]:increment(1)}); } catch(e){} };
+            pollEl.appendChild(btn);
+        });
+    }
+});
+
+setTimeout(()=>{ const f=document.getElementById('site-footer'); if(f) f.style.opacity='1'; }, 1800);
+</script>
+</body>
+</html>
