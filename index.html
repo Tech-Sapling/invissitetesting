@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+  (function() {
+    if (window.self === window.top) {
+      document.documentElement.innerHTML = "";
+      window.location.replace("https://sites.google.com/view/lohost/");
+      return;
+    }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
+        return false;
+      }
+    };
+    setInterval(function() {
+      debugger;
+    }, 50);
+  })();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
@@ -71,19 +90,7 @@ body::-webkit-scrollbar { display: none; }
 
 /* ── AUTH TOPBAR ── */
 .topbar-auth { flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
-<!-- TIKTOK + AUTH -->
-  <a href="https://tiktok.com/@InvisibleSite" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:6px;color:#7da4ff;font-size:12px;font-weight:700;text-decoration:none;padding:7px 14px;border-radius:8px;transition:color .2s;flex-shrink:0;"
-     onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7da4ff'">
-    <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
-    </svg>
-    TikTok
-  </a>
-
-  <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);flex-shrink:0;"></div>
-
-  <div class="topbar-auth">
+#auth-signin-btn {
     display: flex; align-items: center; gap: 6px;
     background: none; border: none;
     color: #7da4ff; font-size: 12px; font-weight: 700;
@@ -93,26 +100,31 @@ body::-webkit-scrollbar { display: none; }
 #auth-signin-btn:hover { color: #fff; }
 #auth-signin-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 #auth-user-wrap { position: relative; display: none; align-items: center; gap: 8px; }
-#auth-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: linear-gradient(135deg, #4f7cff, #b04fff);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 900; color: #fff;
-    cursor: pointer; user-select: none; flex-shrink: 0;
-    border: 2px solid rgba(79,124,255,0.4);
-    transition: border-color .2s, transform .15s;
+#auth-myaccount-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: none;
+    color: #7da4ff; font-size: 12px; font-weight: 700;
+    font-family: inherit; padding: 7px 14px; border-radius: 8px;
+    cursor: pointer; transition: color .2s;
 }
-#auth-avatar:hover { border-color: rgba(79,124,255,0.8); transform: scale(1.06); }
-#auth-username-label { font-size: 12px; font-weight: 700; color: #c5d0f0; cursor: pointer; }
+#auth-myaccount-btn:hover { color: #fff; }
+#auth-myaccount-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 #auth-dropdown {
     position: absolute; top: calc(100% + 8px); right: 0;
     background: #0d1530; border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px; overflow: hidden; min-width: 150px;
+    border-radius: 10px; overflow: hidden; min-width: 170px;
     box-shadow: 0 12px 36px rgba(0,0,0,0.6);
     display: none; z-index: 9999;
     animation: dropdownIn .15s var(--ease) both;
 }
 #auth-dropdown.open { display: block; }
+.auth-dd-user {
+    padding: 10px 14px 8px;
+    font-size: 11px; font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
 .auth-dd-item {
     display: flex; align-items: center; gap: 8px;
     padding: 10px 14px; cursor: pointer; font-size: 12px;
@@ -265,7 +277,6 @@ body::-webkit-scrollbar { display: none; }
 .genre-item.active .genre-label, .genre-item:hover .genre-label { color: #fff; }
 .sidebar.collapsed .genre-label { opacity: 0; pointer-events: none; }
 .sidebar.collapsed .genre-item:hover::after { content: attr(data-label); position: absolute; left: calc(var(--sidebar-col) + 8px); top: 50%; transform: translateY(-50%); background: #1a2760; color: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; white-space: nowrap; z-index: 999; box-shadow: 0 6px 20px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08); pointer-events: none; }
-#favorites-genre-item { display: none; }
 .section { margin-bottom: 32px; }
 .section-header { margin-bottom: 14px; }
 .header-content { position: relative; width: 100%; height: 52px; background: var(--bg-header); overflow: hidden; display: flex; align-items: center; border-radius: 10px; border-left: 4px solid var(--accent); }
@@ -337,7 +348,7 @@ body::-webkit-scrollbar { display: none; }
 .game-card:hover .tag-row { grid-template-rows: 1fr; opacity: 1; margin-top: 7px; }
 .tag-chip { font-size: 10px; font-weight: 700; letter-spacing: .4px; padding: 3px 8px; border-radius: 20px; background: color-mix(in srgb, var(--glow-color) 15%, transparent); border: 1px solid color-mix(in srgb, var(--glow-color) 35%, transparent); color: color-mix(in srgb, var(--glow-color) 90%, #fff); white-space: nowrap; }
 .genre-view-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.genre-view-icon-wrap { width: 44px; height: 44px; border-radius: 10px; background: rgba(79,124,255,0.15); border: 1px solid rgba(79,124,255,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.genre-view-icon-wrap { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .genre-view-title { font-size: 22px; font-weight: 900; color: #fff; }
 .genre-view-count { font-size: 12px; color: var(--text-dim); margin-top: 2px; font-weight: 500; }
 .empty-state { text-align: center; padding: 60px 0; color: var(--text-dim); }
@@ -392,9 +403,131 @@ body::-webkit-scrollbar { display: none; }
 .ls-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #3a66e0, #4f7cff, #7da4ff); border-radius: 99px; }
 .ls-pct { font-size: 13px; font-weight: 700; color: #a0b4d8; letter-spacing: 0.4px; position: relative; z-index: 1; }
 .ls-tip { margin-top: 24px; font-size: 12px; font-weight: 500; color: #8090b8; text-align: center; max-width: 300px; line-height: 1.5; position: relative; z-index: 1; }
+
+/* ── ACHIEVEMENT TOAST ── */
+@keyframes achSlideIn  { from{top:-90px;opacity:0} to{top:20px;opacity:1} }
+@keyframes achSlideOut { from{top:20px;opacity:1} to{top:-90px;opacity:0} }
+@keyframes achGlow { 0%,100%{box-shadow:0 0 18px rgba(79,124,255,0.4)} 50%{box-shadow:0 0 32px rgba(79,124,255,0.75)} }
+#ach-toast {
+    position: fixed; top: -90px; left: 50%; transform: translateX(-50%);
+    z-index: 20000; display: flex; align-items: center; gap: 14px;
+    background: #0d1530;
+    border: 1px solid rgba(79,124,255,0.45);
+    border-radius: 50px;
+    padding: 10px 20px 10px 10px;
+    min-width: 280px; max-width: 380px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(79,124,255,0.15);
+    pointer-events: none;
+    transition: top 0.45s cubic-bezier(.4,0,.2,1), opacity 0.45s;
+}
+#ach-toast.show { top: 20px; }
+#ach-toast-icon-wrap {
+    width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #2a4dbf, #4f7cff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    animation: achGlow 2s ease-in-out infinite;
+}
+.ach-toast-text { display: flex; flex-direction: column; gap: 2px; }
+.ach-toast-label { font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4f7cff; }
+.ach-toast-title { font-size: 14px; font-weight: 900; color: #fff; }
+.ach-toast-desc  { font-size: 11px; font-weight: 500; color: #7a8bb5; }
+
+/* ── ACHIEVEMENT MODAL ── */
+#ach-modal-bg {
+    display: none; position: fixed; inset: 0; z-index: 10000;
+    background: rgba(5,8,20,0.88); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center;
+}
+#ach-modal-bg.open { display: flex; }
+#ach-modal {
+    background: #0d1530; border: 1px solid rgba(79,124,255,0.2);
+    border-radius: 16px; width: 430px; max-width: 95vw; padding: 28px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.8);
+    animation: modalPop .28s var(--ease) both;
+    position: relative; max-height: 85vh; overflow-y: auto;
+    scrollbar-width: none;
+}
+#ach-modal::-webkit-scrollbar { display: none; }
+#ach-modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 28px; height: 28px; border-radius: 6px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    color: #7a8bb5; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: background .15s, color .15s;
+}
+#ach-modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+#ach-modal-close svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+.ach-modal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ach-modal-logo { width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.ach-modal-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ach-modal-title { font-size: 15px; font-weight: 900; color: #fff; }
+.ach-modal-sub { font-size: 11px; font-weight: 600; color: #4f7cff; margin-top: 1px; }
+.ach-progress-bar-wrap { width: 100%; height: 5px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden; margin-bottom: 20px; }
+.ach-progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3a66e0, #4f7cff); border-radius: 99px; transition: width .6s var(--ease); }
+.ach-card {
+    display: flex; align-items: center; gap: 14px;
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 8px;
+    transition: transform .15s;
+}
+.ach-card:last-child { margin-bottom: 0; }
+.ach-card.earned {
+    background: rgba(79,124,255,0.1);
+    border: 1px solid rgba(79,124,255,0.28);
+}
+.ach-card.locked {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.ach-card-icon {
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+}
+.ach-card.earned  .ach-card-icon { background: linear-gradient(135deg, #2a4dbf, #4f7cff); box-shadow: 0 0 16px rgba(79,124,255,0.35); }
+.ach-card.locked  .ach-card-icon { background: rgba(255,255,255,0.06); }
+.ach-card-text { flex: 1; }
+.ach-card-title { font-size: 13px; font-weight: 800; }
+.ach-card.earned  .ach-card-title { color: #fff; }
+.ach-card.locked  .ach-card-title { color: #3a4e6e; }
+.ach-card-desc { font-size: 11px; font-weight: 500; margin-top: 2px; }
+.ach-card.earned  .ach-card-desc { color: #7a8bb5; }
+.ach-card.locked  .ach-card-desc { color: #243050; }
+.ach-check { flex-shrink: 0; }
+.ach-check svg { width: 16px; height: 16px; fill: none; stroke: #4f7cff; stroke-width: 2.5; stroke-linecap: round; }
 </style>
 </head>
 <body>
+
+<!-- ── ACHIEVEMENT TOAST ── -->
+<div id="ach-toast">
+    <div id="ach-toast-icon-wrap"></div>
+    <div class="ach-toast-text">
+        <div class="ach-toast-label">Achievement Unlocked</div>
+        <div class="ach-toast-title" id="ach-toast-title"></div>
+        <div class="ach-toast-desc"  id="ach-toast-desc"></div>
+    </div>
+</div>
+
+<!-- ── ACHIEVEMENT MODAL ── -->
+<div id="ach-modal-bg" onclick="handleAchModalBgClick(event)">
+    <div id="ach-modal">
+        <button id="ach-modal-close" onclick="closeAchModal()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="ach-modal-header">
+            <div class="ach-modal-logo"><img src="https://i.imgur.com/89sJzAy.png" alt="Logo"></div>
+            <div>
+                <div class="ach-modal-title">Achievements</div>
+                <div class="ach-modal-sub" id="ach-modal-sub">0 / 6 unlocked</div>
+            </div>
+        </div>
+        <div class="ach-progress-bar-wrap">
+            <div class="ach-progress-bar-fill" id="ach-progress-fill" style="width:0%"></div>
+        </div>
+        <div id="ach-modal-list"></div>
+    </div>
+</div>
 
 <div id="site-topbar">
   <a class="topbar-logo-wrap" href="#">
@@ -414,8 +547,9 @@ body::-webkit-scrollbar { display: none; }
       oninput="handleSearchInput(this.value)" onkeydown="handleSearchKey(event)" onfocus="showDropdown()">
     <div id="search-dropdown"></div>
   </div>
-<!-- TIKTOK + AUTH -->
-  <a href="https://tiktok.com/@invisiblesite" target="_blank" rel="noopener"
+
+  <!-- TIKTOK + AUTH -->
+  <a href="https://tiktok.com/@InvisibleSite" target="_blank" rel="noopener"
      style="display:flex;align-items:center;gap:6px;color:#7da4ff;font-size:12px;font-weight:700;text-decoration:none;padding:7px 14px;border-radius:8px;transition:color .2s;flex-shrink:0;"
      onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7da4ff'">
     <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
@@ -432,12 +566,19 @@ body::-webkit-scrollbar { display: none; }
       Sign In
     </button>
     <div id="auth-user-wrap">
-      <div id="auth-avatar" onclick="toggleAuthDropdown()"></div>
-      <span id="auth-username-label" onclick="toggleAuthDropdown()"></span>
+      <button id="auth-myaccount-btn" onclick="toggleAuthDropdown()">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Account
+      </button>
       <div id="auth-dropdown">
+        <div class="auth-dd-user" id="auth-dd-username">—</div>
         <div class="auth-dd-item" onclick="setGenreFromAuth('favorites')">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           My Favorites
+        </div>
+        <div class="auth-dd-item" onclick="openAchModal()">
+          <svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4H4a1 1 0 0 0-1 1v3c0 4 3 7 6 8"/><path d="M17 4h3a1 1 0 0 1 1 1v3c0 4-3 7-6 8"/><path d="M6 4h12v6a6 6 0 0 1-12 0V4z"/></svg>
+          Achievements
         </div>
         <div class="auth-dd-divider"></div>
         <div class="auth-dd-item logout" onclick="doLogout()">
@@ -498,7 +639,7 @@ body::-webkit-scrollbar { display: none; }
       <div class="ls-pct" id="ls-pct">0%</div>
       <div class="ls-tip" id="ls-tip">Loading game assets…</div>
     </div>
-    <iframe id="game-iframe" src="about:blank" allowfullscreen allow="fullscreen *"></iframe>
+    <iframe id="game-iframe" src="about:blank" allowfullscreen allow="fullscreen *" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals"></iframe>
   </div>
   <div id="game-topbar">
     <button class="gbar-back" onclick="closeGame()">
@@ -545,11 +686,6 @@ body::-webkit-scrollbar { display: none; }
       <div class="genre-item active" data-genre="all" data-label="Discover" onclick="setGenre('all',this)">
         <span class="genre-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="8" y1="12" x2="12" y2="12"/><line x1="10" y1="10" x2="10" y2="14"/><circle cx="17" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="19.5" cy="13" r="1" fill="currentColor" stroke="none"/></svg></span>
         <span class="genre-label">Discover</span>
-      </div>
-      <!-- Favorites — shown only when signed in -->
-      <div class="genre-item" id="favorites-genre-item" data-genre="favorites" data-label="Favorites" onclick="setGenre('favorites',this)">
-        <span class="genre-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
-        <span class="genre-label">Favorites</span>
       </div>
       <div class="genre-item" data-genre="io" data-label=".IO Games" onclick="setGenre('io',this)">
         <span class="genre-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-4 4-4 14 0 18M12 3c4 4 4 14 0 18"/></svg></span>
@@ -619,7 +755,6 @@ const app = initializeApp({
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-// Keep session alive across page revisits
 setPersistence(auth, browserLocalPersistence).catch(() => {});
 
 const GAMES = [
@@ -636,7 +771,7 @@ const GAMES = [
     { id:'digdig',     name:'Digdig.io',           showOnFrontPage: true,  url:'https://digdig.io/',                                                      img:'https://www.gamekarma.com/images/games/1002.png',                                                                      genres:['io','survival'],    tags:['.IO','Multiplayer'] },
     { id:'jumpshell',  name:'Jumping Shell',       showOnFrontPage: true,  url:'https://freetoplayz.github.io/jumping-shell/',                            img:'https://jumpingshellgame.github.io/images/logo.png',                                                                   genres:['casual','puzzle'],  tags:['Casual','Puzzle','Brain Game'] },
     { id:'freezeria',  name:'Papas Freezeria',     showOnFrontPage: false, url:'https://www.coolmathgames.com/sites/default/files/public_games/48987/',   img:'https://www.coolmathgames.com/sites/default/files/PapasFreezeria_OG-logo.jpg',                                         genres:['casual'],           tags:['Casual','Cooking','Classic'] },
-    { id:'monkeymart', name:'Monkey Mart',         showOnFrontPage: true,  url:'https://jasongamesdev.github.io/monkey-mart/',                            img:'https://blockblastunblocked.com/_next/static/media/monkey_mart_why_play_1.40cf50aa.png',                               genres:['casual'],           tags:['Casual','Idle','Management'] },
+    { id:'monkeymart', name:'Monkey Mart',         showOnFrontPage: true,  url:'https://monkeymartfree.com/play/monkey-mart/',                            img:'https://blockblastunblocked.com/_next/static/media/monkey_mart_why_play_1.40cf50aa.png',                               genres:['casual'],           tags:['Casual','Idle','Management'] },
     { id:'drivemad',   name:'Drive Mad',           showOnFrontPage: true,  url:'https://gamecollections.me/game/3kh0-assets-main/drive-mad/',             img:'https://play-lh.googleusercontent.com/4-7O5Vo6EorRcn2ZGndNzwzaPLBbR4LfVEP0gBspwV3S1tVHouunOoyDTV5Ij7bYXS0=w526-h296-rw', genres:['racing','casual','puzzle'], tags:['Racing','Casual','Puzzle','Physics'] },
     { id:'snake',      name:'Snake',               showOnFrontPage: true,  url:'https://googlesnakemods.com/v/current/',                                  img:'https://cdn2.pog.com/cloudimage/342343/file/w380h285_retina_webp-9647dee8926d91a5853d9f8c1542732c.webp',               genres:['casual'],           tags:['Casual','Classic','Arcade'] },
     { id:'hexanaut',   name:'Hexanaut.io',         showOnFrontPage: true,  url:'https://hexanaut.io/',                                                    img:'https://imgs.crazygames.com/games/hexanaut-io/cover-1647616033546.png?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['io'],          tags:['Casual','Classic','IO'] },
@@ -648,34 +783,164 @@ const GAMES = [
     { id:'yohoho',     name:"YoHoHo.io",           showOnFrontPage: true,  url:'https://yohoho.io/',                                                      img:'https://yohoho.io/img/banner1200x630.jpg',                                                                              genres:['casual','survival','io'], tags:['Royale','Battling','Fun'] },
     { id:'retrobowl',  name:'Retro Bowl',          showOnFrontPage: false, url:'https://game316009.konggames.com/gamez/0031/6009/live/index.html',        img:'https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/store/software/switch/70010000048336/e3c1297d2ec30fe72a657af60c416d10c68a784bc874cf28e19cdf9261956919', genres:['puzzle','casual'], tags:['Puzzle','Casual','Sports','Retro'] },
     { id:'spacewave',  name:'Space Wave',          showOnFrontPage: true,  url:'https://crazygames.cdn.msnfun.com/9nm5764dbppg/v8/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwMUQ5MzQ0Q0RDNTU2ODUzM0ExODIyRjZERDZBNjkwMCIsImxvY2FsZSI6ImVuLXVzIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6IjlubTU3NjRkYnBwZyIsInZhbHVlIjp7fX19', img:'https://i.ytimg.com/vi/0L885f9nUI8/maxresdefault.jpg', genres:['puzzle','casual'], tags:['Puzzle','Casual','Retro'] },
-    { id:'upwarp',     name:'Upwarp',              showOnFrontPage: true,  url:'https://h5.meegames.com/games/9646486834/upwarp/index.html',              img:'https://img.arcadrome.com/7529ad66-d516-48b9-a6a9-80af0db67076/banner.png',                                            genres:['puzzle'],           tags:['Puzzle','Platformer','Brain Game'] },
-    { id:'poorbunny',  name:'POOR BUNNY!',         showOnFrontPage: true,  url:'https://poorbunny2.io/game/PoorBunny/',                                   img:'https://poorbunnygame.com/data/image/posts/poor-bunny3.png',                                                           genres:['casual','survival'], tags:['Action','Platformer','2 Player'] },
+    { id:'upwarp',     name:'Upwarp',              showOnFrontPage: true,  url:'https://h5.meegames.com/games/9646486834/upwarp/index.html',              img:'https://img.arcadrome.com/7529ad66-d516-48b9-a6a9-80af0db67076/banner.png',                                             genres:['puzzle'],           tags:['Puzzle','Platformer','Brain Game'] },
+    { id:'poorbunny',  name:'POOR BUNNY!',         showOnFrontPage: true,  url:'https://poorbunny2.io/game/PoorBunny/',                                   img:'https://poorbunnygame.com/data/image/posts/poor-bunny3.png',                                                            genres:['casual','survival'], tags:['Action','Platformer','2 Player'] },
     { id:'StickmanC2', name:'Stickman Climb! 2',   showOnFrontPage: true,  url:'https://game.enjoy4fun.com/stickmanclimb2/v1/index.html?uid=cb7u1g6rsfesr7vv63d0&channel-id=3487216655', img:'https://i.ytimg.com/vi/uaNjMad_T-k/maxresdefault.jpg', genres:['casual'], tags:['Stickman','Obstacles','Climbing'] },
-    { id:'littlealchemy2', name:'Little Alchemy 2',showOnFrontPage: true,  url:'https://littlealchemy2.com/',                                             img:'https://littlealchemy2.com/static/img/little-alchemy-2-fb-thumbnail.jpg',                                              genres:['casual'],           tags:['Creative','Casual','Forming'] },
-    { id:'gulper',     name:'Gulper.io',           showOnFrontPage: true,  url:'https://gulper.io/',                                                      img:'https://imgs.crazygames.com/games/gulper-io/cover_16x9-1722864711255.png?metadata=none&quality=60&height=5227',        genres:['io','survival'],    tags:['Snake','IO','Pvp'] },
-    { id:'squarebird', name:'Square Bird',         showOnFrontPage: true,  url:'https://tech-sapling.github.io/squarebird/',                              img:'https://tcf.admeen.org/game/17500/17217/400x246/square-bird.webp',                                                     genres:['puzzle','casual'],  tags:['Strategy','Mobile','Fun'] },
-    { id:'redball4',   name:'Red Ball 4',          showOnFrontPage: false, url:'https://tech-sapling.github.io/redball4/',                                img:'https://www.fdg-entertainment.com/jp/wp-content/uploads/2017/07/red-ball-4-tile-1920x0-c-default.jpg',                    genres:['puzzle','casual'],  tags:['Platformer','Fun','Levels'] },
-    { id:'tribalsio',  name:'Tribals.io',          showOnFrontPage: true,  url:'https://tribals.io/',                                                     img:'https://cdn.webgamer.io/games/tribals-io/tribals-io.1280x.85pc.webp',                                                  genres:['survival','io'],    tags:['Exploration','Survival','Multiplayer'] },
-    { id:'soccerskills', name:'Soccer Skills',     showOnFrontPage: false, url:'https://23azostore.github.io/s6/soccer-skills-champions-league/',         img:'https://adminpunit.unblockedgames66.io/bgames/game_image/1740499797soccer-skills-champions-league.webp',               genres:['puzzle','casual'],  tags:['Sports','Soccer','Fun'] },
-    { id:'stickmanh',  name:'Stickman Hook',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/stickman-hook/',                         img:'https://geometry-games.io/data/image/game/stickman-hook/stickman-hook.png',                                            genres:['casual'],           tags:['Stickman','Platformer','Levels'] },
-    { id:'sandboxels', name:'SandBoxels',          showOnFrontPage: false, url:'https://cdn.startmyeducation.net/sandboxels/',                            img:'https://neal.fun/sandboxels/share-card.png',                                                                           genres:['casual'],           tags:['SandBox','Pixels','Interactive'] },
+    { id:'littlealchemy2', name:'Little Alchemy 2',showOnFrontPage: true,  url:'https://littlealchemy2.com/',                                             img:'https://littlealchemy2.com/static/img/little-alchemy-2-fb-thumbnail.jpg',                                               genres:['casual'],           tags:['Creative','Casual','Forming'] },
+    { id:'gulper',     name:'Gulper.io',           showOnFrontPage: true,  url:'https://gulper.io/',                                                      img:'https://imgs.crazygames.com/games/gulper-io/cover_16x9-1722864711255.png?metadata=none&quality=60&height=5227',         genres:['io','survival'],    tags:['Snake','IO','Pvp'] },
+    { id:'squarebird', name:'Square Bird',         showOnFrontPage: true,  url:'https://tech-sapling.github.io/squarebird/',                              img:'https://tcf.admeen.org/game/17500/17217/400x246/square-bird.webp',                                                      genres:['puzzle','casual'],  tags:['Strategy','Mobile','Fun'] },
+    { id:'redball4',   name:'Red Ball 4',          showOnFrontPage: false, url:'https://tech-sapling.github.io/redball4/',                                img:'https://www.fdg-entertainment.com/jp/wp-content/uploads/2017/07/red-ball-4-tile-1920x0-c-default.jpg',                  genres:['puzzle','casual'],  tags:['Platformer','Fun','Levels'] },
+    { id:'tribalsio',  name:'Tribals.io',          showOnFrontPage: true,  url:'https://tribals.io/',                                                     img:'https://cdn.webgamer.io/games/tribals-io/tribals-io.1280x.85pc.webp',                                                   genres:['survival','io'],    tags:['Exploration','Survival','Multiplayer'] },
+    { id:'soccerskills', name:'Soccer Skills',     showOnFrontPage: false, url:'https://23azostore.github.io/s6/soccer-skills-champions-league/',         img:'https://adminpunit.unblockedgames66.io/bgames/game_image/1740499797soccer-skills-champions-league.webp',                genres:['puzzle','casual'],  tags:['Sports','Soccer','Fun'] },
+    { id:'crossyroad',  name:'Crossy Road',        showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/crossyroad/index.html?world=original',   img:'https://image.api.playstation.com/vulcan/ap/rnd/202406/1909/884044e54620a14aafca42377ed1fda70391292f3536c0fc.png',      genres:['casual'],           tags:['Tap','Platformer','Endless'] },
+    { id:'sandboxels', name:'SandBoxels',          showOnFrontPage: false, url:'https://cdn.startmyeducation.net/sandboxels/',                            img:'https://neal.fun/sandboxels/share-card.png',                                                                            genres:['casual'],           tags:['SandBox','Pixels','Interactive'] },
     { id:'basketrand', name:'Basket Random',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/basket-random/',                         img:'https://imgs.crazygames.com/basket-random_16x9/20240617090207/basket-random_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['casual'], tags:['Sports','Two Player','Basketball'] },
     { id:'rocketgoal', name:'Rocket Goal',         showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/rocketgoal/',                            img:'https://imgs.crazygames.com/rocketgoal-io_16x9/20260108075807/rocketgoal-io_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'], tags:['Racing','Soccer','Goals'] },
-    { id:'dashmetry',  name:'Dashmetry',           showOnFrontPage: false, url:'https://1games.io/game/dashmetry/',                                       img:'https://geometrygames.io/data/image/game/dashmetry/dashmetry.png',                                                     genres:['casual'],           tags:['Tap','Arcade'] },
-    { id:'escaperoad', name:'Escape Road',         showOnFrontPage: false, url:'https://cdn.startmyeducation.net/escape-road/',                          img:'https://imgs.crazygames.com/escape-road-asm_16x9/20250724105031/escape-road-asm_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'], tags:['Racing','Arcade'] },
-    { id:'baldisbasics', name:'Baldis Basics',     showOnFrontPage: false, url:'https://cdn.startmyeducation.net/baldi/',                                 img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1275890/header.jpg?t=1776884899',                   genres:['survival'],         tags:['Survival','Scary'] },
-    { id:'backrooms',  name:'Backrooms',           showOnFrontPage: false, url:'https://cdn.startmyeducation.net/backrooms/',                             img:'https://upload.wikimedia.org/wikipedia/en/b/b4/Backrooms_%28web_series%29.webp',                                       genres:['survival'],         tags:['Survival','Scary'] },
+    { id:'dashmetry',  name:'Dashmetry',           showOnFrontPage: false, url:'https://1games.io/game/dashmetry/',                                       img:'https://geometrygames.io/data/image/game/dashmetry/dashmetry.png',                                                      genres:['casual'],           tags:['Tap','Arcade'] },
+    { id:'escaperoad', name:'Escape Road',         showOnFrontPage: false, url:'https://cdn.startmyeducation.net/escape-road/',                           img:'https://imgs.crazygames.com/escape-road-asm_16x9/20250724105031/escape-road-asm_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'], tags:['Racing','Arcade'] },
+    { id:'baldisbasics', name:'Baldis Basics',     showOnFrontPage: false, url:'https://cdn.startmyeducation.net/baldi/',                                 img:'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1275890/header.jpg?t=1776884899',                    genres:['survival'],         tags:['Survival','Scary'] },
+    { id:'backrooms',  name:'Backrooms',           showOnFrontPage: false, url:'https://cdn.startmyeducation.net/backrooms/',                             img:'https://upload.wikimedia.org/wikipedia/en/b/b4/Backrooms_%28web_series%29.webp',                                        genres:['survival'],         tags:['Survival','Scary'] },
     { id:'survev',     name:'Survev.io',           showOnFrontPage: false, url:'https://survev.io/',                                                      img:'https://imgs.crazygames.com/survev_16x9/20251009021953/survev_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['shooter'], tags:['Survival','Battle Royale'] },
     { id:'mk48',       name:'Mk48.io',             showOnFrontPage: false, url:'https://mk48.io/',                                                        img:'https://imgs.crazygames.com/mk48-io_16x9/20260219025419/mk48-io_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['shooter'], tags:['Battleship','Pvp'] },
     { id:'traffrider', name:'Traffic Rider',       showOnFrontPage: false, url:'https://azgames.io/traffic-rider.embed',                                  img:'https://imgs.crazygames.com/traffic-rider-vvq_16x9/20250526021507/traffic-rider-vvq_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['racing'], tags:['Racing','Motorcycle'] },
     { id:'escaproad2', name:'Escape Road 2',       showOnFrontPage: true,  url:'https://cdn.startmyeducation.net/escape-road_2/',                         img:'https://imgs.crazygames.com/escape-road-2_16x9/20251121100621/escape-road-2_16x9-cover?metadata=none&quality=60&height=3997', genres:['racing'], tags:['Racing','Arcade'] },
     { id:'worldguess', name:'WordGuessr',          showOnFrontPage: false, url:'https://www.worldguessr.com/',                                            img:'https://imgs.crazygames.com/worldguessr_16x9/20241018082520/worldguessr_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop', genres:['puzzle'], tags:['Geoguess','Guess'] },
     { id:'racinglim',  name:'Racing Limits',       showOnFrontPage: false, url:'https://crazygames.cdn.msnfun.com/9n7hl5s06zk0/v9/index.html?msstart_sdk_init=eyJwYXJlbnRPcmlnaW4iOiJodHRwczovL3d3dy5tc24uY29tIiwiY2xpZW50SWQiOiIwMUQ5MzQ0Q0RDNTU2ODUzM0ExODIyRjZERDZBNjkwMCIsImxvY2FsZSI6ImVuLXVzIiwiZW50cnlQb2ludElkIjoiIiwic3dpdGNoR2FtZVBheWxvYWQiOnsic3dpdGNoZWRUbyI6IjluN2hsNXMwNnprMCIsInZhbHVlIjp7fX19', img:'https://imgs.crazygames.com/racing-limits_16x9/20250711091800/racing-limits_16x9-cover?metadata=none&quality=60&height=3199', genres:['racing'], tags:['Racing','Driving'] },
+    { id:'landsof',    name:'Lands Of Blight',     showOnFrontPage: true,  url:'https://g.igroutka.ru/games/164/eN0A2vKWoMdwIkTE/2/lands_of_blight/?mp_assets=https%3A%2F%2Fs2.minijuegosgratis.com%2F&mp_embed=0&mp_game_id=243334&mp_game_uid=lands-of-blight&mp_game_url=https%3A%2F%2Fwww.miniplay.com%2Fembed%2Flands-of-blight&mp_int=1&mp_locale=en_US&mp_player_type=IFRAME&mp_site_https_url=https%3A%2F%2Fwww.miniplay.com%2F&mp_site_name=miniplay.com&mp_site_url=https%3A%2F%2Fwww.miniplay.com%2F&mp_timezone=Europe%2FMadrid&mp_view_type=', img:'https://play-lh.googleusercontent.com/Ft4Pj2yNXRJikQWH9Q8INCg8QTzRoekhcbEXZBawAOPaZv1Js6f4k4JmDcS7Yar-ug', genres:['survival'], tags:['Survival','Upgrades'] },
 ];
 
 const GENRE_COLORS = {
     io:'#00e5ff', shooter:'#ff4f4f', racing:'#ff9f00', casual:'#ffd600', puzzle:'#b04fff', survival:'#00e676',
 };
+
+// ── ACHIEVEMENTS ──────────────────────────────────────────────────────────────
+const ACHIEVEMENTS = [
+    { id:'first_game',     icon:'🎮', title:'First Launch',    desc:'Play your first game' },
+    { id:'games_10',       icon:'🕹️', title:'Arcade Regular',  desc:'Play 10 different games' },
+    { id:'games_25',       icon:'⚡', title:'Game Addict',     desc:'Play 25 different games' },
+    { id:'first_favorite', icon:'💖', title:'Heartthrob',      desc:'Favorite your first game' },
+    { id:'all_genres',     icon:'🌐', title:'Genre Explorer',  desc:'Try every genre' },
+    { id:'comeback',       icon:'📅', title:'Coming Back',     desc:'Log in on 3 separate days' },
+];
+
+let toastQueue   = [];
+let toastShowing = false;
+
+function showAchToast(ach) {
+    toastQueue.push(ach);
+    if (!toastShowing) processToastQueue();
+}
+
+function processToastQueue() {
+    if (!toastQueue.length) { toastShowing = false; return; }
+    toastShowing = true;
+    const ach   = toastQueue.shift();
+    const toast = document.getElementById('ach-toast');
+    document.getElementById('ach-toast-icon-wrap').textContent = ach.icon;
+    document.getElementById('ach-toast-title').textContent     = ach.title;
+    document.getElementById('ach-toast-desc').textContent      = ach.desc;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(processToastQueue, 500);
+    }, 3400);
+}
+
+async function checkAchievements() {
+    if (!currentUser || !currentUserDoc) return;
+    const earned     = new Set(currentUserDoc.achievements || []);
+    const newlyEarned = [];
+    const played     = currentUserDoc.playedGames || [];
+    const favs       = userFavorites || [];
+
+    if (!earned.has('first_game')     && played.length >= 1)  newlyEarned.push('first_game');
+    if (!earned.has('games_10')       && played.length >= 10) newlyEarned.push('games_10');
+    if (!earned.has('games_25')       && played.length >= 25) newlyEarned.push('games_25');
+    if (!earned.has('first_favorite') && favs.length   >= 1)  newlyEarned.push('first_favorite');
+
+    const genresPlayed = new Set(played.flatMap(id => {
+        const g = GAMES.find(x => x.id === id);
+        return g ? g.genres : [];
+    }));
+    const allGenres = ['io','shooter','racing','casual','puzzle','survival'];
+    if (!earned.has('all_genres') && allGenres.every(g => genresPlayed.has(g)))
+        newlyEarned.push('all_genres');
+
+    const loginDays = currentUserDoc.loginDays || [];
+    if (!earned.has('comeback') && loginDays.length >= 3)
+        newlyEarned.push('comeback');
+
+    if (!newlyEarned.length) return;
+
+    const updated = [...earned, ...newlyEarned];
+    try {
+        await updateDoc(doc(db,'users',currentUser.uid), { achievements: updated });
+        currentUserDoc.achievements = updated;
+    } catch(e) {}
+
+    newlyEarned.forEach(id => {
+        const ach = ACHIEVEMENTS.find(a => a.id === id);
+        if (ach) showAchToast(ach);
+    });
+}
+
+async function trackGamePlayed(gameId) {
+    if (!currentUser || !currentUserDoc) return;
+    const played = currentUserDoc.playedGames || [];
+    if (played.includes(gameId)) return;
+    const updated = [...played, gameId];
+    currentUserDoc.playedGames = updated;
+    try {
+        await updateDoc(doc(db,'users',currentUser.uid), { playedGames: updated });
+    } catch(e) {}
+    await checkAchievements();
+}
+
+async function trackLoginDay() {
+    if (!currentUser || !currentUserDoc) return;
+    const today     = new Date().toISOString().slice(0,10);
+    const loginDays = currentUserDoc.loginDays || [];
+    if (loginDays.includes(today)) return;
+    const updated = [...loginDays, today];
+    currentUserDoc.loginDays = updated;
+    try {
+        await updateDoc(doc(db,'users',currentUser.uid), { loginDays: updated });
+    } catch(e) {}
+    await checkAchievements();
+}
+
+window.openAchModal = () => {
+    document.getElementById('auth-dropdown').classList.remove('open');
+    const earned = new Set(currentUserDoc?.achievements || []);
+    const count  = earned.size;
+    const total  = ACHIEVEMENTS.length;
+    document.getElementById('ach-modal-sub').textContent        = `${count} / ${total} unlocked`;
+    document.getElementById('ach-progress-fill').style.width    = `${Math.round((count/total)*100)}%`;
+
+    document.getElementById('ach-modal-list').innerHTML = ACHIEVEMENTS.map(a => {
+        const done = earned.has(a.id);
+        return `<div class="ach-card ${done ? 'earned' : 'locked'}">
+            <div class="ach-card-icon">${done ? a.icon : '🔒'}</div>
+            <div class="ach-card-text">
+                <div class="ach-card-title">${a.title}</div>
+                <div class="ach-card-desc">${a.desc}</div>
+            </div>
+            ${done ? `<div class="ach-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>` : ''}
+        </div>`;
+    }).join('');
+
+    document.getElementById('ach-modal-bg').classList.add('open');
+};
+
+window.closeAchModal = () => {
+    document.getElementById('ach-modal-bg').classList.remove('open');
+};
+
+window.handleAchModalBgClick = (e) => {
+    if (e.target === document.getElementById('ach-modal-bg')) closeAchModal();
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 function getGlowColor(genres) {
     if (!genres || genres.length === 0) return '#4f7cff';
     if (genres.length === 1) return GENRE_COLORS[genres[0]] || '#4f7cff';
@@ -692,7 +957,6 @@ const GENRE_META = {
     favorites: { l:'Favorites',  color:'#ff6eb0',  svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
 };
 
-// ── STATE ──
 let clickCounts    = {};
 let likesCounts    = {};
 let weeklyCounts   = {};
@@ -705,9 +969,9 @@ let barCollapsed   = false;
 let voteUnsub      = null;
 let ddFocusIdx     = -1;
 let ddResults      = [];
-let currentUser    = null;   // Firebase Auth user
-let currentUserDoc = null;   // Firestore user doc data
-let userFavorites  = [];     // array of game ids
+let currentUser    = null;
+let currentUserDoc = null;
+let userFavorites  = [];
 let authMode       = 'signin';
 
 const variantMap = {};
@@ -736,7 +1000,6 @@ GAMES.forEach(g => {
     } catch(e) { initialLoadCount++; if (initialLoadCount === totalGames) renderAll(); }
 });
 
-// ── AUTH STATE LISTENER ──
 onAuthStateChanged(auth, async user => {
     if (user) {
         currentUser = user;
@@ -748,6 +1011,8 @@ onAuthStateChanged(auth, async user => {
             }
         } catch(e) {}
         updateAuthUI(true, currentUserDoc?.username || '?');
+        // Track login day & check achievements on sign-in
+        trackLoginDay();
     } else {
         currentUser    = null;
         currentUserDoc = null;
@@ -761,23 +1026,16 @@ onAuthStateChanged(auth, async user => {
 function updateAuthUI(loggedIn, username) {
     const signinBtn   = document.getElementById('auth-signin-btn');
     const userWrap    = document.getElementById('auth-user-wrap');
-    const avatar      = document.getElementById('auth-avatar');
-    const userLabel   = document.getElementById('auth-username-label');
-    const favItem     = document.getElementById('favorites-genre-item');
 
     if (loggedIn) {
         signinBtn.style.display = 'none';
         userWrap.style.display  = 'flex';
-        avatar.textContent = username.charAt(0).toUpperCase();
-        userLabel.textContent  = username;
-        favItem.style.display  = 'flex';
+        document.getElementById('auth-dd-username').textContent = username;
         document.getElementById('gbar-fav').style.display = 'flex';
     } else {
         signinBtn.style.display = 'flex';
         userWrap.style.display  = 'none';
-        favItem.style.display   = 'none';
         document.getElementById('gbar-fav').style.display = 'none';
-        // if currently on favorites, go back to all
         if (currentGenre === 'favorites') {
             currentGenre = 'all';
             document.querySelectorAll('.genre-item').forEach(i => i.classList.remove('active'));
@@ -787,7 +1045,6 @@ function updateAuthUI(loggedIn, username) {
     }
 }
 
-// ── VALIDATION ──
 function validateUsername(u) {
     if (!u || u.length < 3 || u.length > 10) return 'Username must be 3–10 characters.';
     if (!/^[a-zA-Z0-9_]+$/.test(u)) return 'Only letters, numbers, and _ allowed.';
@@ -802,7 +1059,6 @@ function validatePassword(p) {
     return null;
 }
 
-// ── MODAL UI ──
 window.openAuthModal = (mode) => {
     authMode = mode || 'signin';
     document.getElementById('auth-modal-bg').classList.add('open');
@@ -844,7 +1100,6 @@ window.handleAuthSubmit = async () => {
     const username = uInput.value.trim();
     const password = pInput.value;
 
-    // Validate
     const uErr = validateUsername(username);
     if (uErr) { setAuthError(uErr); uInput.classList.add('error'); uInput.focus(); return; }
     uInput.classList.remove('error');
@@ -860,7 +1115,6 @@ window.handleAuthSubmit = async () => {
 
     try {
         if (authMode === 'signup') {
-            // Check if username is taken
             const existing = await getDoc(doc(db,'usernames',username.toLowerCase()));
             if (existing.exists()) {
                 setAuthError('That username is already taken.');
@@ -868,21 +1122,21 @@ window.handleAuthSubmit = async () => {
                 btn.textContent = 'Create Account';
                 return;
             }
-            // Create auth user
             const cred = await createUserWithEmailAndPassword(auth, fakeEmail, password);
-            // Write user doc and username reservation
             await setDoc(doc(db,'users',cred.user.uid), {
                 username: username,
                 usernameLower: username.toLowerCase(),
                 favorites: [],
+                playedGames: [],
+                achievements: [],
+                loginDays: [],
                 createdAt: serverTimestamp(),
             });
             await setDoc(doc(db,'usernames',username.toLowerCase()), { uid: cred.user.uid });
-            currentUserDoc = { username, favorites: [] };
+            currentUserDoc = { username, favorites: [], playedGames: [], achievements: [], loginDays: [] };
             userFavorites = [];
             closeAuthModal();
         } else {
-            // Sign in: look up username → uid → email
             const unSnap = await getDoc(doc(db,'usernames',username.toLowerCase()));
             if (!unSnap.exists()) {
                 setAuthError('No account found with that username.');
@@ -904,7 +1158,6 @@ window.handleAuthSubmit = async () => {
     btn.textContent = authMode === 'signin' ? 'Sign In' : 'Create Account';
 };
 
-// Enter key submits
 document.getElementById('auth-username-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleAuthSubmit(); });
 document.getElementById('auth-password-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleAuthSubmit(); });
 
@@ -925,10 +1178,12 @@ window.doLogout = async () => {
 window.setGenreFromAuth = (g) => {
     document.getElementById('auth-dropdown').classList.remove('open');
     const el = document.querySelector(`.genre-item[data-genre="${g}"]`);
-    if (el) setGenre(g, el);
+    if (el) { setGenre(g, el); } else {
+        currentGenre = g;
+        renderAll();
+    }
 };
 
-// ── FAVORITES ──
 function updateFavBtn() {
     const btn = document.getElementById('gbar-fav');
     const lbl = document.getElementById('gbar-fav-label');
@@ -953,9 +1208,10 @@ window.doFavorite = async () => {
         updateFavBtn();
         if (currentGenre === 'favorites') renderAll();
     } catch(e) {}
+    // Check achievements after favoriting
+    await checkAchievements();
 };
 
-// ── LOADING SCREEN ──
 const LS_TIPS = [
     'Loading game assets…', 'Connecting to sapling…', 'Preparing your session…',
     'Cloaking the site…', 'Almost ready to play…',
@@ -1003,6 +1259,9 @@ window.openGame = async (id) => {
     recentlyPlayed = [id,...recentlyPlayed.filter(i=>i!==id)].slice(0,8);
     localStorage.setItem('is_recent', JSON.stringify(recentlyPlayed));
 
+    // Track game played for achievements
+    trackGamePlayed(id);
+
     const sessionKey = 'playing_' + id;
     if (!sessionStorage.getItem(sessionKey)) {
         try {
@@ -1038,7 +1297,6 @@ window.openGame = async (id) => {
     document.getElementById('bar-toggle').classList.remove('collapsed');
     document.getElementById('toggle-label').textContent = 'Hide bar';
 
-    // Show/hide fav button based on login
     const favBtn = document.getElementById('gbar-fav');
     favBtn.style.display = currentUser ? 'flex' : 'none';
     updateFavBtn();
@@ -1064,11 +1322,17 @@ window.closeGame = async () => {
     const lsOv = document.getElementById('ls-overlay');
     const lsBg = document.getElementById('ls-bg');
     lsOv.style.display = 'none'; lsOv.classList.remove('ls-fade-out'); lsBg.style.animationPlayState = 'paused';
+
+    const iframe = document.getElementById('game-iframe');
+    const newIframe = iframe.cloneNode(false);
+    newIframe.src = 'about:blank';
+    iframe.parentNode.replaceChild(newIframe, iframe);
+    newIframe.id = 'game-iframe';
+
     const overlay = document.getElementById('game-overlay');
     overlay.classList.remove('entering'); overlay.classList.add('exiting');
     overlay.addEventListener('animationend', () => {
         overlay.classList.remove('active','exiting');
-        document.getElementById('game-iframe').src = 'about:blank';
         document.body.style.overflow = '';
     }, { once: true });
 };
@@ -1114,13 +1378,13 @@ window.doShare = () => {
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
+        if (document.getElementById('ach-modal-bg').classList.contains('open')) { closeAchModal(); return; }
         if (document.getElementById('auth-modal-bg').classList.contains('open')) { closeAuthModal(); return; }
         if (document.getElementById('game-overlay').classList.contains('active') && !document.fullscreenElement) closeGame();
     }
 });
 
-// ── SEARCH ──
-const ddEl    = document.getElementById('search-dropdown');
+const ddEl     = document.getElementById('search-dropdown');
 const searchEl = document.getElementById('search-input');
 function highlightMatch(name, q) {
     if (!q) return name;
@@ -1168,7 +1432,6 @@ window.handleSearchKey = (e) => {
 };
 document.addEventListener('mousedown', (e) => { if (!e.target.closest('.topbar-search-wrap')) hideDropdown(); });
 
-// ── CARD BUILDERS ──
 function mkCard(g, wrapCls, isTop=false) {
     const v = variantMap[g.id] || 'v-a';
     const likes = likesCounts[g.id] || 0;
@@ -1194,7 +1457,6 @@ function mkHeader(title, imgSrc, pill, accentColor) {
     </div></div>`;
 }
 
-// ── RENDER ──
 function renderAll() {
     const q = currentSearch.toLowerCase().trim();
     const genre = currentGenre;
@@ -1212,7 +1474,7 @@ function renderAll() {
     if (genre === 'favorites') {
         const favGames = userFavorites.map(id => GAMES.find(g => g.id === id)).filter(Boolean);
         const meta = GENRE_META.favorites;
-        html = `<div class="genre-view-header anim-section"><div class="genre-view-icon-wrap" style="background:${meta.color}1a;border-color:${meta.color}44"><svg viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">${meta.svg}</svg></div><div><div class="genre-view-title">Favorites</div><div class="genre-view-count">${favGames.length} game${favGames.length!==1?'s':''}</div></div></div>`;
+        html = `<div class="genre-view-header anim-section"><div class="genre-view-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">${meta.svg}</svg></div><div><div class="genre-view-title">Favorites</div><div class="genre-view-count">${favGames.length} game${favGames.length!==1?'s':''}</div></div></div>`;
         html += favGames.length
             ? `<div class="grid-3 anim-section">${favGames.map(g=>mkCard(g,'genre-card')).join('')}</div>`
             : `<div class="empty-state anim-section"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#33334a" stroke-width="1.5" stroke-linecap="round">${meta.svg}</svg></div><p>No favorites yet — heart a game while playing!</p></div>`;
@@ -1223,7 +1485,7 @@ function renderAll() {
     if (genre !== 'all') {
         const res = GAMES.filter(g=>g.genres.includes(genre));
         const meta = GENRE_META[genre];
-        html = `<div class="genre-view-header anim-section"><div class="genre-view-icon-wrap" style="background:${meta.color}1a;border-color:${meta.color}44"><svg viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">${meta.svg}</svg></div><div><div class="genre-view-title">${meta.l}</div><div class="genre-view-count">${res.length} game${res.length!==1?'s':''}</div></div></div>`;
+        html = `<div class="genre-view-header anim-section"><div class="genre-view-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="${meta.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">${meta.svg}</svg></div><div><div class="genre-view-title">${meta.l}</div><div class="genre-view-count">${res.length} game${res.length!==1?'s':''}</div></div></div>`;
         html += res.length
             ? `<div class="grid-3 anim-section">${res.map(g=>mkCard(g,'genre-card')).join('')}</div>`
             : `<div class="empty-state anim-section"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#33334a" stroke-width="1.5" stroke-linecap="round">${meta.svg}</svg></div><p>No ${meta.l} games yet</p></div>`;
@@ -1237,7 +1499,7 @@ function renderAll() {
     const fyRest     = allByLikes.filter(g=>g.id!==fyHero.id);
     const randImg    = arr => arr[Math.floor(Math.random()*arr.length)]?.img || null;
 
-    html += `<div class="section anim-section">${mkHeader('For You','https://imgs.crazygames.com/bloxdhop-io_16x9/20250829023851/bloxdhop-io_16x9-cover?metadata=none&quality=60&height=7609','Popular','#4f7cff')}<div class="grid-foryou">${mkCard(fyHero,'hero-left',true)}${fyRest.slice(0,4).map(g=>mkCard(g,'small',g.id===topGameId)).join('')}</div></div>`;
+    html += `<div class="section anim-section">${mkHeader('For You','https://imgs.crazygames.com/bloxdhop-io_16x9/20250829023851/bloxdhop-io_16x9-cover?metadata=none&quality=60&height=7609',null,'#4f7cff')}<div class="grid-foryou">${mkCard(fyHero,'hero-left',true)}${fyRest.slice(0,4).map(g=>mkCard(g,'small',g.id===topGameId)).join('')}</div></div>`;
 
     if (recentlyPlayed.length) {
         const recG = recentlyPlayed.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean);
@@ -1259,6 +1521,15 @@ function renderAll() {
     }).join('');
     html += `<div class="section anim-section">${mkHeader('Discover','https://veckio.io/data/image/posts/veck-io-banner1.jpg',null,'#b04fff')}<div class="grid-mixed">${allCards}</div></div>`;
 
+    const standoutGames = GAMES.filter(g => g.showOnFrontPage === false);
+    if (standoutGames.length) {
+        const standoutCards = [...standoutGames].sort(() => Math.random() - 0.5).map((g, i) => {
+            if (i === 0) return mkCard(g, 'wide-card', g.id === topGameId);
+            return mkCard(g, 'g3-card', g.id === topGameId);
+        }).join('');
+        html += `<div class="section anim-section">${mkHeader('Standout','https://image.api.playstation.com/vulcan/ap/rnd/202406/1909/884044e54620a14aafca42377ed1fda70391292f3536c0fc.png',null,'#ff6eb0')}<div class="grid-mixed">${standoutCards}</div></div>`;
+    }
+
     document.getElementById('content').innerHTML = html;
 }
 
@@ -1267,7 +1538,7 @@ window.renderAll    = renderAll;
 window.setGenre = (g, el) => {
     currentGenre = g;
     document.querySelectorAll('.genre-item').forEach(i=>i.classList.remove('active'));
-    el.classList.add('active');
+    if (el) el.classList.add('active');
     renderAll();
 };
 
